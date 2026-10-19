@@ -1,30 +1,33 @@
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Sparkles, Mail, KeyRound, ArrowRight, Loader2, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAuth } from '@/context/AuthContext'
+import { sendOtpThunk, verifyOtpThunk } from '@/features/auth/authApi'
+import { loginAsDemoAdmin, decrementCooldown } from '@/features/auth/authSlice'
 import { Button } from '@/components/ui/button'
 
 export function LoginPage() {
-  const { isAuthenticated, sendOtp, verifyOtp, loginAsDemoAdmin } = useAuth()
+  const dispatch = useDispatch()
+  const { isAuthenticated, isSubmitting, cooldownSeconds } = useSelector(
+    (state) => state.auth
+  )
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [step, setStep] = useState('email') // 'email' | 'otp'
+  const [step, setStep] = useState('email')
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
-  const [cooldown, setCooldown] = useState(0)
-  const [submitting, setSubmitting] = useState(false)
 
   const from = location.state?.from?.pathname || '/'
 
   useEffect(() => {
-    if (cooldown <= 0) return
+    if (cooldownSeconds <= 0) return
     const timer = setInterval(() => {
-      setCooldown((prev) => (prev > 0 ? prev - 1 : 0))
+      dispatch(decrementCooldown())
     }, 1000)
     return () => clearInterval(timer)
-  }, [cooldown])
+  }, [cooldownSeconds, dispatch])
 
   if (isAuthenticated) {
     return <Navigate to={from} replace />
@@ -38,21 +41,15 @@ export function LoginPage() {
       return
     }
 
-    setSubmitting(true)
-    try {
-      const response = await sendOtp(trimmedEmail)
-      const waitSec = response?.data?.cooldownSeconds || 30
-      setCooldown(waitSec)
+    const resultAction = await dispatch(sendOtpThunk(trimmedEmail))
+    if (sendOtpThunk.fulfilled.match(resultAction)) {
       setStep('otp')
-      toast.success(response?.message || '6-digit verification code sent to your email.')
-    } catch (error) {
-      const message =
-        error.response?.data?.message ||
-        error.message ||
-        'Failed to dispatch OTP. Is the backend server running?'
-      toast.error(message)
-    } finally {
-      setSubmitting(false)
+      toast.success(
+        resultAction.payload?.message ||
+          '6-digit verification code sent to your email.'
+      )
+    } else {
+      toast.error(resultAction.payload || 'Failed to dispatch OTP.')
     }
   }
 
@@ -64,24 +61,19 @@ export function LoginPage() {
       return
     }
 
-    setSubmitting(true)
-    try {
-      await verifyOtp(email.trim().toLowerCase(), cleanOtp)
+    const resultAction = await dispatch(
+      verifyOtpThunk({ email: email.trim().toLowerCase(), otp: cleanOtp })
+    )
+    if (verifyOtpThunk.fulfilled.match(resultAction)) {
       toast.success('Administrator session authenticated.')
       navigate(from, { replace: true })
-    } catch (error) {
-      const message =
-        error.response?.data?.message ||
-        error.message ||
-        'Invalid OTP or insufficient administrator permissions.'
-      toast.error(message)
-    } finally {
-      setSubmitting(false)
+    } else {
+      toast.error(resultAction.payload || 'OTP verification failed.')
     }
   }
 
   const handleDemoAccess = () => {
-    loginAsDemoAdmin()
+    dispatch(loginAsDemoAdmin())
     toast.success('Entered Admin Panel in Demo Preview Mode')
     navigate(from, { replace: true })
   }
@@ -129,10 +121,10 @@ export function LoginPage() {
               <Button
                 type="submit"
                 size="lg"
-                disabled={submitting}
+                disabled={isSubmitting}
                 className="w-full gap-2"
               >
-                {submitting ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
                     Sending OTP...
@@ -148,7 +140,8 @@ export function LoginPage() {
           ) : (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div className="rounded-lg bg-muted/60 px-3 py-2 text-xs text-muted-foreground">
-                Code sent to <span className="font-semibold text-foreground">{email}</span>.
+                Code sent to{' '}
+                <span className="font-semibold text-foreground">{email}</span>.
                 <button
                   type="button"
                   onClick={() => {
@@ -188,10 +181,10 @@ export function LoginPage() {
               <Button
                 type="submit"
                 size="lg"
-                disabled={submitting || otp.length !== 6}
+                disabled={isSubmitting || otp.length !== 6}
                 className="w-full gap-2"
               >
-                {submitting ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
                     Verifying...
@@ -208,11 +201,13 @@ export function LoginPage() {
                 <span>Didn&apos;t receive the email?</span>
                 <button
                   type="button"
-                  disabled={cooldown > 0 || submitting}
+                  disabled={cooldownSeconds > 0 || isSubmitting}
                   onClick={handleSendOtp}
                   className="font-medium text-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend OTP'}
+                  {cooldownSeconds > 0
+                    ? `Resend in ${cooldownSeconds}s`
+                    : 'Resend OTP'}
                 </button>
               </div>
             </form>
@@ -239,7 +234,7 @@ export function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground">
-          Protected by JWT + Role-Based Access Control (`role === &apos;admin&apos;`)
+          Protected by Redux Toolkit + JWT + RBAC (`role === &apos;admin&apos;`)
         </p>
       </div>
     </div>

@@ -1,7 +1,8 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
-import { ThemeProvider } from '@/context/ThemeContext'
-import { AuthProvider } from '@/context/AuthContext'
+import { fetchCurrentUserThunk } from '@/features/auth/authApi'
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginPage } from '@/pages/LoginPage'
@@ -13,34 +14,38 @@ import { ReportsPage } from '@/pages/ReportsPage'
 import { AiLogsPage } from '@/pages/AiLogsPage'
 
 export default function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchCurrentUserThunk())
+  }, [dispatch])
+
   return (
-    <ThemeProvider defaultTheme="dark">
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
 
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<DashboardPage />} />
-              <Route path="users" element={<UsersPage />} />
-              <Route path="orders" element={<OrdersPage />} />
-              <Route path="pricing" element={<PricingPage />} />
-              <Route path="reports" element={<ReportsPage />} />
-              <Route path="ai-logs" element={<AiLogsPage />} />
-            </Route>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="pricing" element={<PricingPage />} />
+            <Route path="reports" element={<ReportsPage />} />
+            <Route path="ai-logs" element={<AiLogsPage />} />
+          </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-        <Toaster position="top-right" richColors closeButton />
-      </AuthProvider>
-    </ThemeProvider>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-right" richColors closeButton />
+    </>
   )
 }

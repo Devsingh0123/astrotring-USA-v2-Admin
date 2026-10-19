@@ -1,14 +1,16 @@
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Menu, Moon, Sun, LogOut, ShieldAlert } from 'lucide-react'
-import { useAuth } from '@/context/AuthContext'
-import { useTheme } from '@/context/ThemeContext'
+import { logoutThunk } from '@/features/auth/authApi'
+import { toggleTheme } from '@/features/theme/themeSlice'
 import { NAV_ITEMS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 
 export function Header({ onOpenMobileSidebar }) {
-  const { user, logout } = useAuth()
-  const { theme, toggleTheme } = useTheme()
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+  const { theme } = useSelector((state) => state.theme)
   const location = useLocation()
 
   const currentNav =
@@ -19,7 +21,7 @@ export function Header({ onOpenMobileSidebar }) {
     ) || NAV_ITEMS[0]
 
   const handleLogout = async () => {
-    await logout()
+    await dispatch(logoutThunk())
     toast.success('Signed out of Admin Command Center')
   }
 
@@ -57,7 +59,7 @@ export function Header({ onOpenMobileSidebar }) {
         <Button
           variant="outline"
           size="icon-sm"
-          onClick={toggleTheme}
+          onClick={() => dispatch(toggleTheme())}
           aria-label="Toggle color theme"
         >
           {theme === 'dark' ? (

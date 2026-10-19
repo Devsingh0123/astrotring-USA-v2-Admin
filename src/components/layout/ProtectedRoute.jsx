@@ -1,16 +1,18 @@
+import { useSelector } from 'react-redux'
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from '@/context/AuthContext'
 import { Loader2 } from 'lucide-react'
 
 export function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth)
   const location = useLocation()
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background text-foreground">
         <Loader2 className="size-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Verifying administrator session...</p>
+        <p className="text-sm text-muted-foreground">
+          Verifying administrator session...
+        </p>
       </div>
     )
   }
