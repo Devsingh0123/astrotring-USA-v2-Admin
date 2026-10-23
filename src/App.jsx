@@ -2,22 +2,18 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
-import { fetchCurrentUserThunk } from '@/features/auth/authApi'
+import { fetchAdminMeThunk } from '@/features/auth/authApi'
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginPage } from '@/pages/LoginPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { UsersPage } from '@/pages/UsersPage'
-import { OrdersPage } from '@/pages/OrdersPage'
-import { PricingPage } from '@/pages/PricingPage'
-import { ReportsPage } from '@/pages/ReportsPage'
-import { AiLogsPage } from '@/pages/AiLogsPage'
 
 export default function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchCurrentUserThunk())
+    dispatch(fetchAdminMeThunk())
   }, [dispatch])
 
   return (
@@ -36,10 +32,6 @@ export default function App() {
           >
             <Route index element={<DashboardPage />} />
             <Route path="users" element={<UsersPage />} />
-            <Route path="orders" element={<OrdersPage />} />
-            <Route path="pricing" element={<PricingPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="ai-logs" element={<AiLogsPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

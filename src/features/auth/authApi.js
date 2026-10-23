@@ -2,112 +2,72 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '@/lib/api'
 import { STORAGE_KEYS } from '@/lib/constants'
 
-export const sendOtpThunk = createAsyncThunk(
-  'auth/sendOtp',
-  async (email, { rejectWithValue }) => {
+export const loginAdminThunk = createAsyncThunk(
+  'auth/loginAdmin',
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const { data } = await api.post('/auth/send-otp', { email })
-      return data
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          'Failed to dispatch OTP. Is the backend server running?'
-      )
-    }
-  }
-)
-
-export const verifyOtpThunk = createAsyncThunk(
-  'auth/verifyOtp',
-  async ({ email, otp }, { rejectWithValue }) => {
-    try {
-      const { data } = await api.post('/auth/verify-otp', { email, otp })
+      const { data } = await api.post('/auth/login', { email, password })
       const payload = data?.data || data
-      const verifiedUser = payload?.user
+      const admin = payload?.admin
 
-      if (!verifiedUser) {
-        return rejectWithValue('Invalid authentication response from server.')
+      if (!admin || admin.role !== 'admin') {
+        return rejectWithValue('Access denied: Account does not have administrator privileges.')
       }
 
-      if (verifiedUser.role !== 'admin') {
-        if (payload.refreshToken) {
-          try {
-            await api.post('/auth/logout', { refreshToken: payload.refreshToken })
-          } catch {
-            // Ignore cleanup error
-          }
-        }
-        return rejectWithValue(
-          'Access denied: Your account does not have Administrator privileges.'
-        )
+      if (payload.accessToken) {
+        localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, payload.accessToken)
+      }
+      if (payload.refreshToken) {
+        localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, payload.refreshToken)
+      }
+      if (admin) {
+        localStorage.setItem(STORAGE_KEYS.ADMIN_USER, JSON.stringify(admin))
       }
 
-      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, payload.accessToken)
-      localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, payload.refreshToken)
-      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(verifiedUser))
-
-      return verifiedUser
+      return admin
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message ||
           error.message ||
-          'Invalid OTP or insufficient administrator permissions.'
+          'Failed to sign in. Please verify your administrator credentials.'
       )
     }
   }
 )
 
-export const fetchCurrentUserThunk = createAsyncThunk(
-  'auth/fetchCurrentUser',
+export const fetchAdminMeThunk = createAsyncThunk(
+  'auth/fetchAdminMe',
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
     if (!token) {
       return null
     }
 
-    if (token === 'demo_admin_token') {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEYS.USER)
-        return saved ? JSON.parse(saved) : null
-      } catch {
-        return null
-      }
-    }
-
     try {
       const { data } = await api.get('/auth/me')
-      const profile = data?.data?.user || data?.user
-      if (!profile || profile.role !== 'admin') {
+      const admin = data?.data?.admin || data?.admin
+      if (!admin || admin.role !== 'admin') {
         localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
         localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
-        localStorage.removeItem(STORAGE_KEYS.USER)
+        localStorage.removeItem(STORAGE_KEYS.ADMIN_USER)
         return rejectWithValue('Unauthorized administrator session.')
       }
-      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(profile))
-      return profile
+      localStorage.setItem(STORAGE_KEYS.ADMIN_USER, JSON.stringify(admin))
+      return admin
     } catch (error) {
       localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
       localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
-      localStorage.removeItem(STORAGE_KEYS.USER)
+      localStorage.removeItem(STORAGE_KEYS.ADMIN_USER)
       return rejectWithValue(
-        error.response?.data?.message || 'Session expired.'
+        error.response?.data?.message || 'Session expired. Please sign in again.'
       )
     }
   }
 )
 
-export const logoutThunk = createAsyncThunk('auth/logout', async () => {
-  const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN)
-  if (refreshToken) {
-    try {
-      await api.post('/auth/logout', { refreshToken })
-    } catch {
-      // Ignore network errors on logout
-    }
-  }
+export const logoutAdminThunk = createAsyncThunk('auth/logoutAdmin', async () => {
   localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
   localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
-  localStorage.removeItem(STORAGE_KEYS.USER)
+  localStorage.removeItem(STORAGE_KEYS.ADMIN_USER)
   return null
 })

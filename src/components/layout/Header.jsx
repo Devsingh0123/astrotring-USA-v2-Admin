@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { Menu, Moon, Sun, LogOut, ShieldAlert } from 'lucide-react'
-import { logoutThunk } from '@/features/auth/authApi'
+import { Menu, Moon, Sun, LogOut, ShieldCheck } from 'lucide-react'
+import { logoutAdminThunk } from '@/features/auth/authApi'
 import { toggleTheme } from '@/features/theme/themeSlice'
 import { NAV_ITEMS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 export function Header({ onOpenMobileSidebar }) {
   const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
+  const { admin } = useSelector((state) => state.auth)
   const { theme } = useSelector((state) => state.theme)
   const location = useLocation()
 
@@ -21,12 +21,14 @@ export function Header({ onOpenMobileSidebar }) {
     ) || NAV_ITEMS[0]
 
   const handleLogout = async () => {
-    await dispatch(logoutThunk())
-    toast.success('Signed out of Admin Command Center')
+    await dispatch(logoutAdminThunk())
+    toast.success('Signed out of Admin Console')
   }
 
+  const initialLetter = (admin?.email?.[0] || 'A').toUpperCase()
+
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-xs lg:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-md lg:px-6">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -43,18 +45,16 @@ export function Header({ onOpenMobileSidebar }) {
             {currentNav.title}
           </h1>
           <p className="hidden text-xs text-muted-foreground sm:block">
-            AstroTring Platform Administration
+            AstroTring Enterprise Administration
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-2.5">
-        {user?.isDemo && (
-          <span className="hidden items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground md:inline-flex">
-            <ShieldAlert className="size-3.5 text-primary" />
-            Demo Preview Mode
-          </span>
-        )}
+      <div className="flex items-center gap-3">
+        <span className="hidden items-center gap-1.5 rounded-full border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground md:inline-flex">
+          <ShieldCheck className="size-3.5 text-emerald-500" />
+          Enterprise Admin
+        </span>
 
         <Button
           variant="outline"
@@ -69,13 +69,13 @@ export function Header({ onOpenMobileSidebar }) {
           )}
         </Button>
 
-        <div className="hidden items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 sm:flex">
+        <div className="hidden items-center gap-2.5 rounded-lg border border-border bg-card px-3 py-1.5 sm:flex">
           <div className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-            {(user?.email || 'A')[0].toUpperCase()}
+            {initialLetter}
           </div>
           <div className="flex flex-col text-left">
-            <span className="max-w-[160px] truncate text-xs font-medium text-foreground">
-              {user?.email || 'admin@astrotring.com'}
+            <span className="max-w-[180px] truncate text-xs font-medium text-foreground">
+              {admin?.email || 'admin@astrotring.com'}
             </span>
           </div>
         </div>
