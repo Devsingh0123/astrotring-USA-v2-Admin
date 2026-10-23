@@ -9,6 +9,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
+  Receipt,
+  Tag,
+  Package,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NAV_ITEMS } from '@/lib/constants'
@@ -21,6 +24,9 @@ const ICON_MAP = {
   DollarSign,
   FileText,
   Sparkles,
+  Receipt,
+  Tag,
+  Package,
 }
 
 export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {

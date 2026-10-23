@@ -8,6 +8,9 @@ import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginPage } from '@/pages/LoginPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { UsersPage } from '@/pages/UsersPage'
+import { OrdersPage } from '@/pages/OrdersPage'
+import { CouponsPage } from '@/pages/CouponsPage'
+import { QuestionPacksPage } from '@/pages/QuestionPacksPage'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -32,6 +35,9 @@ export default function App() {
           >
             <Route index element={<DashboardPage />} />
             <Route path="users" element={<UsersPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="coupons" element={<CouponsPage />} />
+            <Route path="question-packs" element={<QuestionPacksPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

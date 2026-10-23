@@ -23,4 +23,22 @@ export const NAV_ITEMS = [
     icon: 'Users',
     badge: null,
   },
+  {
+    title: 'Orders',
+    path: '/orders',
+    icon: 'Receipt',
+    badge: null,
+  },
+  {
+    title: 'Coupons',
+    path: '/coupons',
+    icon: 'Tag',
+    badge: null,
+  },
+  {
+    title: 'Question Packs',
+    path: '/question-packs',
+    icon: 'Package',
+    badge: null,
+  },
 ]
