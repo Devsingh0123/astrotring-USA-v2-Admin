@@ -29,6 +29,20 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+function formatAccountDate(dateValue) {
+  if (!dateValue) return '—'
+  const date = new Date(dateValue)
+  if (isNaN(date.getTime())) return '—'
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  })
+}
+
 export function UserDetailsModal({ open, onOpenChange }) {
   const dispatch = useDispatch()
   const { selectedUser, loadingDetails, updatingStatusId } = useSelector(
@@ -284,8 +298,14 @@ export function UserDetailsModal({ open, onOpenChange }) {
 
             {/* Timestamps & Modal Footer */}
             <div className="flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-[11px] text-muted-foreground">
-                Account created: {new Date(selectedUser.created_at).toLocaleString()}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Calendar className="size-3.5 text-muted-foreground/70" />
+                <span>
+                  Account created:{' '}
+                  <strong className="font-medium text-foreground">
+                    {formatAccountDate(selectedUser.created_at || selectedUser.createdAt)}
+                  </strong>
+                </span>
               </div>
 
               <div className="flex items-center gap-2">

@@ -157,15 +157,15 @@ export function CouponsPage() {
   const totalRedemptions = couponList.reduce((sum, c) => sum + (Number(c.used_count) || 0), 0)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Tag className="w-6 h-6 text-primary" />
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
+            <Tag className="size-7 text-primary" />
             Coupons & Discounts
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <p className="text-sm text-muted-foreground mt-1">
             Create promotional voucher codes, configure discounts, and manage active campaign vouchers.
           </p>
         </div>
@@ -176,10 +176,10 @@ export function CouponsPage() {
             size="sm"
             onClick={loadCoupons}
             disabled={loadingList}
-            className="gap-2 h-9 border-border/60 hover:bg-muted"
+            className="gap-2 h-9.5 px-4 rounded-xl border-border/70 hover:bg-muted font-medium"
           >
             <RefreshCw
-              className={`w-3.5 h-3.5 ${loadingList ? 'animate-spin' : ''}`}
+              className={`size-3.5 ${loadingList ? 'animate-spin' : ''}`}
             />
             Refresh
           </Button>
@@ -187,53 +187,61 @@ export function CouponsPage() {
           <Button
             size="sm"
             onClick={() => setCreateModalOpen(true)}
-            className="gap-2 h-9 shadow-sm font-medium"
+            className="gap-2 h-9.5 px-4 rounded-xl shadow-xs font-semibold"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="size-4" />
             Create Coupon
           </Button>
         </div>
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="p-5 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm shadow-xs space-y-1.5">
+          <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             <span>Total Coupons</span>
-            <Tag className="w-4 h-4 text-primary" />
+            <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+              <Tag className="size-4" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-foreground">{totalCoupons}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-foreground font-mono">{totalCoupons}</p>
           <p className="text-xs text-muted-foreground">Configured vouchers</p>
         </div>
 
-        <div className="p-4 rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
+        <div className="p-5 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm shadow-xs space-y-1.5">
+          <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             <span>Active Coupons</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <div className="size-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <CheckCircle2 className="size-4" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+          <p className="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
             {activeCount}
           </p>
           <p className="text-xs text-muted-foreground">Ready for redemption</p>
         </div>
 
-        <div className="p-4 rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
+        <div className="p-5 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm shadow-xs space-y-1.5">
+          <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             <span>Disabled / Expired</span>
-            <XCircle className="w-4 h-4 text-muted-foreground" />
+            <div className="size-8 rounded-lg bg-muted/60 text-muted-foreground flex items-center justify-center">
+              <XCircle className="size-4" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-muted-foreground">
+          <p className="text-2xl sm:text-3xl font-bold text-muted-foreground font-mono">
             {inactiveCount}
           </p>
           <p className="text-xs text-muted-foreground">Inactive campaigns</p>
         </div>
 
-        <div className="p-4 rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
+        <div className="p-5 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm shadow-xs space-y-1.5">
+          <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             <span>Total Redemptions</span>
-            <Sparkles className="w-4 h-4 text-primary" />
+            <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+              <Sparkles className="size-4" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-foreground">
+          <p className="text-2xl sm:text-3xl font-bold text-foreground font-mono">
             {totalRedemptions}
           </p>
           <p className="text-xs text-muted-foreground">Used across all orders</p>
@@ -241,33 +249,33 @@ export function CouponsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="size-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search coupon code (e.g. DIWALI50)..."
-            className="w-full pl-9 pr-4 py-2 text-sm rounded-lg bg-background border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground uppercase"
+            className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl bg-background/80 border border-border/70 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground uppercase"
           />
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
-            <Filter className="w-3 h-3" />
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1.5 font-medium">
+            <Filter className="size-3.5" />
             Status:
           </span>
           {STATUS_FILTERS.map((f) => (
             <button
               key={f.value}
               onClick={() => setStatusFilter(f.value)}
-              className={`px-3 py-1 text-xs rounded-lg font-medium transition-colors ${
+              className={`px-3 py-1.5 text-xs rounded-xl font-medium transition-colors ${
                 statusFilter === f.value
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground'
+                  ? 'bg-primary text-primary-foreground shadow-xs font-semibold'
+                  : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
               {f.label}
@@ -277,7 +285,7 @@ export function CouponsPage() {
       </div>
 
       {/* Coupons Data Table */}
-      <div className="rounded-xl border border-border/60 bg-card overflow-hidden shadow-sm">
+      <div className="rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm overflow-hidden shadow-xs">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/60 bg-muted/20">

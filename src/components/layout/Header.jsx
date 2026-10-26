@@ -1,11 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { Menu, Moon, Sun, LogOut, ShieldCheck } from 'lucide-react'
-import { logoutAdminThunk } from '@/features/auth/authApi'
+import { Menu, Moon, Sun, ShieldCheck } from 'lucide-react'
 import { toggleTheme } from '@/features/theme/themeSlice'
 import { NAV_ITEMS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
 
 export function Header({ onOpenMobileSidebar }) {
   const dispatch = useDispatch()
@@ -20,16 +18,11 @@ export function Header({ onOpenMobileSidebar }) {
         : location.pathname.startsWith(item.path)
     ) || NAV_ITEMS[0]
 
-  const handleLogout = async () => {
-    await dispatch(logoutAdminThunk())
-    toast.success('Signed out of Admin Console')
-  }
-
   const initialLetter = (admin?.email?.[0] || 'A').toUpperCase()
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-md lg:px-6">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border/60 bg-background/85 px-6 backdrop-blur-md lg:px-8">
+      <div className="flex items-center gap-3.5">
         <Button
           variant="ghost"
           size="icon-sm"
@@ -41,7 +34,7 @@ export function Header({ onOpenMobileSidebar }) {
         </Button>
 
         <div>
-          <h1 className="text-base font-semibold tracking-tight text-foreground">
+          <h1 className="text-base font-bold tracking-tight text-foreground">
             {currentNav.title}
           </h1>
           <p className="hidden text-xs text-muted-foreground sm:block">
@@ -51,8 +44,8 @@ export function Header({ onOpenMobileSidebar }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="hidden items-center gap-1.5 rounded-full border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground md:inline-flex">
-          <ShieldCheck className="size-3.5 text-emerald-500" />
+        <span className="hidden items-center gap-1.5 rounded-full border border-border/80 bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground md:inline-flex">
+          <ShieldCheck className="size-3.5 text-primary" />
           Enterprise Admin
         </span>
 
@@ -61,16 +54,17 @@ export function Header({ onOpenMobileSidebar }) {
           size="icon-sm"
           onClick={() => dispatch(toggleTheme())}
           aria-label="Toggle color theme"
+          className="rounded-xl border-border/60"
         >
           {theme === 'dark' ? (
-            <Sun className="size-4" />
+            <Sun className="size-4 text-primary" />
           ) : (
-            <Moon className="size-4" />
+            <Moon className="size-4 text-foreground" />
           )}
         </Button>
 
-        <div className="hidden items-center gap-2.5 rounded-lg border border-border bg-card px-3 py-1.5 sm:flex">
-          <div className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+        <div className="hidden items-center gap-2.5 rounded-xl border border-border/80 bg-card/60 px-3 py-1.5 backdrop-blur-sm sm:flex">
+          <div className="flex size-6.5 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 text-xs font-bold text-primary-foreground shadow-xs">
             {initialLetter}
           </div>
           <div className="flex flex-col text-left">
@@ -79,16 +73,6 @@ export function Header({ onOpenMobileSidebar }) {
             </span>
           </div>
         </div>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleLogout}
-          className="gap-1.5"
-        >
-          <LogOut className="size-3.5" />
-          <span className="hidden sm:inline">Sign Out</span>
-        </Button>
       </div>
     </header>
   )

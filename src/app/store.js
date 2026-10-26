@@ -5,6 +5,9 @@ import usersReducer from '@/features/users/usersSlice'
 import ordersReducer from '@/features/orders/ordersSlice'
 import couponsReducer from '@/features/coupons/couponsSlice'
 import packsReducer from '@/features/packs/packsSlice'
+import dashboardReducer from '@/features/dashboard/dashboardSlice'
+import blogsReducer from '@/features/blogs/blogsSlice'
+import reportPacksReducer from '@/features/reportPacks/reportPacksSlice'
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +17,8 @@ export const store = configureStore({
     orders: ordersReducer,
     coupons: couponsReducer,
     packs: packsReducer,
+    reportPacks: reportPacksReducer,
+    dashboard: dashboardReducer,
+    blogs: blogsReducer,
   },
 })

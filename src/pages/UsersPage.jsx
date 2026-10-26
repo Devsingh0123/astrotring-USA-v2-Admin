@@ -35,6 +35,17 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+function formatRegistrationDate(dateValue) {
+  if (!dateValue) return '—'
+  const date = new Date(dateValue)
+  if (isNaN(date.getTime())) return '—'
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
 export function UsersPage() {
   const dispatch = useDispatch()
   const { users, pagination, loadingList, updatingStatusId } = useSelector(
@@ -116,19 +127,20 @@ export function UsersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Header Bar */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
+              <Users className="size-7 text-primary" />
               User Management
             </h1>
-            <Badge variant="outline" className="border-border bg-muted/60 text-xs font-semibold">
+            <Badge variant="outline" className="border-border/80 bg-muted/50 px-2.5 py-0.5 text-xs font-semibold">
               {pagination?.total ?? users.length} Accounts
             </Badge>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+          <p className="mt-1 text-sm text-muted-foreground">
             Inspect customer accounts, review Vedic birth charts, track credit balances, and manage status.
           </p>
         </div>
@@ -138,7 +150,7 @@ export function UsersPage() {
           size="sm"
           onClick={loadUsers}
           disabled={loadingList}
-          className="gap-2 self-start sm:self-auto"
+          className="gap-2 h-9.5 px-4 rounded-xl border-border/70 hover:bg-muted font-medium self-start sm:self-auto"
         >
           <RefreshCw className={`size-3.5 ${loadingList ? 'animate-spin' : ''}`} />
           <span>Refresh</span>
@@ -146,28 +158,28 @@ export function UsersPage() {
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center p-4 rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm">
         <div className="relative w-full max-w-sm">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search users by email..."
-            className="h-9 w-full rounded-lg border border-input bg-card pr-8 pl-9 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30"
+            className="h-10 w-full rounded-xl border border-border/70 bg-background/80 pr-9 pl-10 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
           {searchInput && (
             <button
               type="button"
               onClick={() => setSearchInput('')}
-              className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:text-foreground"
+              className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 text-muted-foreground hover:text-foreground"
             >
               <X className="size-3.5" />
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex items-center gap-2.5 self-end sm:self-auto">
           <span className="text-xs text-muted-foreground">Rows per page:</span>
           <select
             value={limit}
@@ -175,7 +187,7 @@ export function UsersPage() {
               setLimit(Number(e.target.value))
               setPage(1)
             }}
-            className="h-8 rounded-lg border border-input bg-card px-2 text-xs text-foreground outline-none focus:border-ring"
+            className="h-9 rounded-xl border border-border/70 bg-card px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
           >
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -185,7 +197,7 @@ export function UsersPage() {
       </div>
 
       {/* Main Data Table */}
-      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
+      <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm shadow-xs">
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow className="border-b border-border">
@@ -313,7 +325,7 @@ export function UsersPage() {
 
                     {/* Registration Date */}
                     <TableCell className="py-3.5 text-xs text-muted-foreground">
-                      {u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}
+                      {formatRegistrationDate(u.created_at || u.createdAt)}
                     </TableCell>
 
                     {/* Status Pill */}
@@ -370,49 +382,53 @@ export function UsersPage() {
         </Table>
 
         {/* Pagination Bar */}
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-border px-4 py-3 sm:flex-row">
-          <div className="text-xs text-muted-foreground">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-4 border-t border-border/50 bg-muted/20 text-xs text-muted-foreground">
+          <div>
             {pagination?.total > 0 ? (
-              <>
+              <span>
                 Showing{' '}
-                <strong className="text-foreground">
+                <strong className="text-foreground font-mono">
                   {(pagination.page - 1) * pagination.limit + 1}
                 </strong>{' '}
                 to{' '}
-                <strong className="text-foreground">
+                <strong className="text-foreground font-mono">
                   {Math.min(pagination.page * pagination.limit, pagination.total)}
                 </strong>{' '}
-                of <strong className="text-foreground">{pagination.total}</strong> users
-              </>
+                of <strong className="text-foreground font-mono">{pagination.total}</strong> users
+              </span>
             ) : (
               '0 users'
             )}
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <Button
-              variant="outline"
-              size="icon-xs"
-              disabled={pagination?.page <= 1 || loadingList}
-              onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-              aria-label="Previous page"
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
-
-            <span className="px-2 text-xs font-medium text-foreground">
-              Page {pagination?.page || 1} of {pagination?.totalPages || 1}
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <span>
+              Page <strong className="text-foreground font-mono">{pagination?.page || 1}</strong> of{' '}
+              <strong className="text-foreground font-mono">{pagination?.totalPages || 1}</strong>
             </span>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8 rounded-lg border-border/70"
+                disabled={pagination?.page <= 1 || loadingList}
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
 
-            <Button
-              variant="outline"
-              size="icon-xs"
-              disabled={pagination?.page >= pagination?.totalPages || loadingList}
-              onClick={() => setPage((prev) => prev + 1)}
-              aria-label="Next page"
-            >
-              <ChevronRight className="size-4" />
-            </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8 rounded-lg border-border/70"
+                disabled={pagination?.page >= pagination?.totalPages || loadingList}
+                onClick={() => setPage((prev) => prev + 1)}
+                aria-label="Next page"
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

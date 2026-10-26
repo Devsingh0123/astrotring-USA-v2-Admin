@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { clearSelectedOrder } from '@/features/orders/ordersSlice'
+import { RefundOrderDialog } from './RefundOrderDialog'
 import {
   Copy,
   Check,
@@ -25,6 +26,7 @@ import {
   Clock,
   FileCheck,
   Layers,
+  RotateCcw,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -32,6 +34,7 @@ export function OrderDetailsModal({ open, onOpenChange }) {
   const dispatch = useDispatch()
   const { selectedOrder, loadingDetails } = useSelector((state) => state.orders)
   const [copiedKey, setCopiedKey] = useState(null)
+  const [refundDialogOpen, setRefundDialogOpen] = useState(false)
 
   const handleClose = () => {
     onOpenChange(false)
@@ -419,11 +422,32 @@ export function OrderDetailsModal({ open, onOpenChange }) {
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-border/40 bg-muted/10 flex justify-end">
+        <div className="p-4 border-t border-border/40 bg-muted/10 flex items-center justify-between gap-3">
+          {selectedOrder && selectedOrder.status === 'paid' ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setRefundDialogOpen(true)}
+              className="text-rose-600 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/10 hover:border-rose-500/50 gap-1.5 font-medium"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Refund Order
+            </Button>
+          ) : (
+            <div />
+          )}
+
           <Button variant="outline" onClick={handleClose}>
             Close
           </Button>
         </div>
+
+        {/* Refund Dialog */}
+        <RefundOrderDialog
+          open={refundDialogOpen}
+          onOpenChange={setRefundDialogOpen}
+          order={selectedOrder}
+        />
       </DialogContent>
     </Dialog>
   )

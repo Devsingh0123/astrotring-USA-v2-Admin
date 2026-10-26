@@ -55,9 +55,11 @@ export const fetchAdminMeThunk = createAsyncThunk(
       localStorage.setItem(STORAGE_KEYS.ADMIN_USER, JSON.stringify(admin))
       return admin
     } catch (error) {
-      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
-      localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
-      localStorage.removeItem(STORAGE_KEYS.ADMIN_USER)
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
+        localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
+        localStorage.removeItem(STORAGE_KEYS.ADMIN_USER)
+      }
       return rejectWithValue(
         error.response?.data?.message || 'Session expired. Please sign in again.'
       )

@@ -8,7 +8,7 @@ export function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
       <Sidebar
         isCollapsed={isCollapsed}
         onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
@@ -16,10 +16,10 @@ export function AdminLayout() {
         onCloseMobile={() => setMobileOpen(false)}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col h-full overflow-hidden">
         <Header onOpenMobileSidebar={() => setMobileOpen(true)} />
-        <main className="flex-1 p-4 lg:p-6">
-          <div className="mx-auto max-w-7xl">
+        <main className="flex-1 overflow-y-auto px-6 py-8 sm:px-8 lg:px-10 lg:py-9">
+          <div className="mx-auto max-w-[1600px] space-y-8">
             <Outlet />
           </div>
         </main>

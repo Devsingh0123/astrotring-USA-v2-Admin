@@ -15,7 +15,7 @@ export const NAV_ITEMS = [
     title: 'Dashboard',
     path: '/',
     icon: 'LayoutDashboard',
-    badge: 'Soon',
+    badge: null,
   },
   {
     title: 'Users',
@@ -39,6 +39,18 @@ export const NAV_ITEMS = [
     title: 'Question Packs',
     path: '/question-packs',
     icon: 'Package',
+    badge: null,
+  },
+  {
+    title: 'Report Packs',
+    path: '/report-packs',
+    icon: 'FileText',
+    badge: null,
+  },
+  {
+    title: 'Blogs',
+    path: '/blogs',
+    icon: 'BookOpen',
     badge: null,
   },
 ]

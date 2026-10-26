@@ -11,6 +11,9 @@ import { UsersPage } from '@/pages/UsersPage'
 import { OrdersPage } from '@/pages/OrdersPage'
 import { CouponsPage } from '@/pages/CouponsPage'
 import { QuestionPacksPage } from '@/pages/QuestionPacksPage'
+import { ReportPacksPage } from '@/pages/ReportPacksPage'
+import { BlogsPage } from '@/pages/BlogsPage'
+import { BlogEditorPage } from '@/pages/BlogEditorPage'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -38,6 +41,10 @@ export default function App() {
             <Route path="orders" element={<OrdersPage />} />
             <Route path="coupons" element={<CouponsPage />} />
             <Route path="question-packs" element={<QuestionPacksPage />} />
+            <Route path="report-packs" element={<ReportPacksPage />} />
+            <Route path="blogs" element={<BlogsPage />} />
+            <Route path="blogs/new" element={<BlogEditorPage />} />
+            <Route path="blogs/edit/:id" element={<BlogEditorPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

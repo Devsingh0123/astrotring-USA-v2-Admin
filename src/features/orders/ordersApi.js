@@ -39,3 +39,34 @@ export const fetchOrderDetailsThunk = createAsyncThunk(
     }
   }
 )
+
+export const refundOrderThunk = createAsyncThunk(
+  'orders/refundOrder',
+  async ({ orderId, amount, reason } = {}, { rejectWithValue }) => {
+    try {
+      const payload = {}
+      if (amount !== undefined && amount !== null && amount !== '') {
+        const parsed = parseFloat(amount)
+        if (!isNaN(parsed) && parsed > 0) {
+          payload.amount = parsed
+        }
+      }
+      if (reason && reason.trim()) {
+        payload.reason = reason.trim()
+      }
+      const { data } = await api.post(`/orders/${orderId}/refund`, payload)
+      return {
+        orderId,
+        refund: data?.data?.refund,
+        status: data?.data?.status || 'refunded',
+        message: data?.message || 'Order refunded successfully',
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          'Failed to process order refund.'
+      )
+    }
+  }
+)
