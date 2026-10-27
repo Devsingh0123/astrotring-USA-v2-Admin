@@ -167,7 +167,7 @@ export function UserDetailsModal({ open, onOpenChange }) {
                 <div className="rounded-lg bg-muted/40 p-2.5">
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Sparkles className="size-3.5 text-primary" />
-                    <span>Vaani Credits</span>
+                    <span>Jyotish Credits</span>
                   </div>
                   <div className="mt-1 font-mono text-base font-semibold text-foreground">
                     {selectedUser.credit_balance ?? 0}

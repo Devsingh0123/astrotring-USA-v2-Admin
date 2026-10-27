@@ -183,7 +183,7 @@ Base URL: `http://localhost:5001/api/v1/admin`
   - **Data Table Presentation:**
     - User avatar badge with email address and verified icon indicator.
     - Role badge (`user` / `admin`) and color-coded Tier badge (`Free`, `Silver`, `Gold`, `Diamond`).
-    - Vaani question credits count and Artha Sutram report credits count.
+    - Jyotish question credits count and Artha Sutram report credits count.
     - Onboarding completion status (Complete vs Pending).
     - Account status badge (`Active` emerald vs `Blocked` rose).
     - Inline Switch toggle for immediate block/unblock action with optimistic state synchronization.

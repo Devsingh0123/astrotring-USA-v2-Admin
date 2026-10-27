@@ -48,7 +48,7 @@ const CATEGORIES = [
   { id: 'planetary-transits', label: 'Planetary Transits' },
   { id: 'remedies-gemstones', label: 'Remedies & Gemstones' },
   { id: 'panchang-muhurta', label: 'Panchang & Muhurta' },
-  { id: 'vaani-ai', label: 'Vaani AI Insights' },
+  { id: 'jyotish-ai', label: 'Jyotish AI Insights' },
 ]
 
 function formatBlogDate(dateStr) {
