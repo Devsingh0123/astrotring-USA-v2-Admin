@@ -30,16 +30,12 @@ import { toast } from 'sonner'
 const DEFAULT_PRICES = {
   INR: { originalPrice: '999', offerPrice: '499' },
   USD: { originalPrice: '14.99', offerPrice: '7.99' },
-  GBP: { originalPrice: '12.99', offerPrice: '6.99' },
-  EUR: { originalPrice: '13.99', offerPrice: '7.49' },
-}
+    }
 
 const CURRENCIES = [
   { code: 'INR', label: 'Indian Rupee', symbol: '₹', step: '1', min: '1' },
   { code: 'USD', label: 'US Dollar', symbol: '$', step: '0.01', min: '0.01' },
-  { code: 'GBP', label: 'British Pound', symbol: '£', step: '0.01', min: '0.01' },
-  { code: 'EUR', label: 'Euro', symbol: '€', step: '0.01', min: '0.01' },
-]
+    ]
 
 const TIERS = [
   { id: 'silver', label: 'Silver', color: 'border-slate-400/40 text-slate-700 dark:text-slate-300 bg-slate-500/10' },
@@ -79,9 +75,7 @@ export function PackModal({ open, onOpenChange, packToEdit = null }) {
   const [prices, setPrices] = useState({
     INR: { originalPrice: '', offerPrice: '' },
     USD: { originalPrice: '', offerPrice: '' },
-    GBP: { originalPrice: '', offerPrice: '' },
-    EUR: { originalPrice: '', offerPrice: '' },
-  })
+          })
 
   const [validationError, setValidationError] = useState('')
 
@@ -117,14 +111,6 @@ export function PackModal({ open, onOpenChange, packToEdit = null }) {
         USD: {
           originalPrice: parsed.USD?.originalPrice ?? '',
           offerPrice: parsed.USD?.offerPrice ?? '',
-        },
-        GBP: {
-          originalPrice: parsed.GBP?.originalPrice ?? '',
-          offerPrice: parsed.GBP?.offerPrice ?? '',
-        },
-        EUR: {
-          originalPrice: parsed.EUR?.originalPrice ?? '',
-          offerPrice: parsed.EUR?.offerPrice ?? '',
         },
       })
     } else {

@@ -115,7 +115,7 @@ export function DashboardPage() {
             <p className="text-xs font-bold text-foreground uppercase tracking-wider">Multi-Currency Billing</p>
             <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-1 font-medium">
               <span className="size-2 rounded-full bg-sky-500" />
-              INR • USD • GBP • EUR
+              INR • USD
             </p>
           </div>
         </div>

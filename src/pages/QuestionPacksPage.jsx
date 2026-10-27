@@ -278,8 +278,8 @@ export function QuestionPacksPage() {
               <Sparkles className="size-4" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-foreground font-mono">4 Currencies</p>
-          <p className="text-xs text-muted-foreground font-mono">INR • USD • GBP • EUR</p>
+          <p className="text-2xl sm:text-3xl font-bold text-foreground font-mono">2 Currencies</p>
+          <p className="text-xs text-muted-foreground font-mono">INR • USD</p>
         </div>
       </div>
 
@@ -464,11 +464,6 @@ export function QuestionPacksPage() {
                           </span>
                           {Number(usdOrig) > Number(usdOffer) && (
                             <span className="line-through">{formatUSD(usdOrig)}</span>
-                          )}
-                          {(pricesMap.GBP?.offerPrice || pricesMap.EUR?.offerPrice) && (
-                            <span className="text-[10px] bg-muted/80 rounded px-1 text-muted-foreground">
-                              +GBP/EUR
-                            </span>
                           )}
                         </div>
                       </div>

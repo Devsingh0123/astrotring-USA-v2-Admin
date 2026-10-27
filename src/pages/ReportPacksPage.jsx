@@ -70,23 +70,7 @@ function formatUSD(val) {
   }).format(Number(val))
 }
 
-function formatGBP(val) {
-  if (val === undefined || val === null || isNaN(Number(val))) return '—'
-  return new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'GBP',
-    maximumFractionDigits: 2,
-  }).format(Number(val))
-}
 
-function formatEUR(val) {
-  if (val === undefined || val === null || isNaN(Number(val))) return '—'
-  return new Intl.NumberFormat('de-DE', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 2,
-  }).format(Number(val))
-}
 
 function getTierBadge(tier) {
   switch (tier?.toLowerCase()) {
@@ -321,8 +305,7 @@ export function ReportPacksPage() {
           <div className="mt-2 flex items-baseline gap-1.5 font-mono text-xs font-bold text-foreground">
             <span className="px-1.5 py-0.5 rounded bg-muted/60">INR ₹</span>
             <span className="px-1.5 py-0.5 rounded bg-muted/60">USD $</span>
-            <span className="px-1.5 py-0.5 rounded bg-muted/60">GBP £</span>
-            <span className="px-1.5 py-0.5 rounded bg-muted/60">EUR €</span>
+            
           </div>
         </div>
       </div>
@@ -365,7 +348,7 @@ export function ReportPacksPage() {
             <span className="text-[11px] font-semibold text-muted-foreground px-1.5 flex items-center gap-1">
               <Coins className="size-3 text-primary" /> View:
             </span>
-            {['INR', 'USD', 'GBP', 'EUR'].map((curr) => (
+            {['INR', 'USD'].map((curr) => (
               <button
                 key={curr}
                 onClick={() => setSelectedCurrencyView(curr)}
@@ -544,17 +527,11 @@ export function ReportPacksPage() {
                           {offerPrice ? (
                             <div className="flex items-baseline gap-2">
                               <span className="text-sm font-extrabold text-foreground">
-                                {selectedCurrencyView === 'INR' && formatINR(offerPrice)}
-                                {selectedCurrencyView === 'USD' && formatUSD(offerPrice)}
-                                {selectedCurrencyView === 'GBP' && formatGBP(offerPrice)}
-                                {selectedCurrencyView === 'EUR' && formatEUR(offerPrice)}
+                                {selectedCurrencyView === 'INR' ? formatINR(offerPrice) : formatUSD(offerPrice)}
                               </span>
                               {origPrice > 0 && origPrice !== offerPrice && (
                                 <span className="text-xs text-muted-foreground line-through">
-                                  {selectedCurrencyView === 'INR' && formatINR(origPrice)}
-                                  {selectedCurrencyView === 'USD' && formatUSD(origPrice)}
-                                  {selectedCurrencyView === 'GBP' && formatGBP(origPrice)}
-                                  {selectedCurrencyView === 'EUR' && formatEUR(origPrice)}
+                                  {selectedCurrencyView === 'INR' ? formatINR(origPrice) : formatUSD(origPrice)}
                                 </span>
                               )}
                               {discount > 0 && (
@@ -569,7 +546,7 @@ export function ReportPacksPage() {
 
                           {/* Quick currency badge indicators */}
                           <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                            {['INR', 'USD', 'GBP', 'EUR'].map((c) => (
+                            {['INR', 'USD'].map((c) => (
                               <span
                                 key={c}
                                 className={`px-1 rounded ${

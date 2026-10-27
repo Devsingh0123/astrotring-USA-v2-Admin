@@ -34,16 +34,12 @@ import { toast } from 'sonner'
 const DEFAULT_REPORT_PRICES = {
   INR: { originalPrice: '2999', offerPrice: '1999' },
   USD: { originalPrice: '29.99', offerPrice: '19.99' },
-  GBP: { originalPrice: '24.99', offerPrice: '16.99' },
-  EUR: { originalPrice: '27.99', offerPrice: '18.99' },
-}
+    }
 
 const CURRENCIES = [
   { code: 'INR', label: 'Indian Rupee', symbol: '₹', step: '1', min: '1', defaultOffer: '1999', defaultOrig: '2999' },
   { code: 'USD', label: 'US Dollar', symbol: '$', step: '0.01', min: '0.01', defaultOffer: '19.99', defaultOrig: '29.99' },
-  { code: 'GBP', label: 'British Pound', symbol: '£', step: '0.01', min: '0.01', defaultOffer: '16.99', defaultOrig: '24.99' },
-  { code: 'EUR', label: 'Euro', symbol: '€', step: '0.01', min: '0.01', defaultOffer: '18.99', defaultOrig: '27.99' },
-]
+    ]
 
 const TIERS = [
   {
@@ -156,14 +152,6 @@ export function ReportPackModal({ open, onOpenChange, packToEdit = null }) {
           originalPrice: parsed.USD?.originalPrice !== undefined ? String(parsed.USD.originalPrice) : '',
           offerPrice: parsed.USD?.offerPrice !== undefined ? String(parsed.USD.offerPrice) : '',
         },
-        GBP: {
-          originalPrice: parsed.GBP?.originalPrice !== undefined ? String(parsed.GBP.originalPrice) : '',
-          offerPrice: parsed.GBP?.offerPrice !== undefined ? String(parsed.GBP.offerPrice) : '',
-        },
-        EUR: {
-          originalPrice: parsed.EUR?.originalPrice !== undefined ? String(parsed.EUR.originalPrice) : '',
-          offerPrice: parsed.EUR?.offerPrice !== undefined ? String(parsed.EUR.offerPrice) : '',
-        },
       })
       setValidationError('')
       setActiveTab('details')
@@ -250,7 +238,7 @@ export function ReportPackModal({ open, onOpenChange, packToEdit = null }) {
 
     // Build prices payload
     const structuredPrices = {}
-    for (const curr of ['INR', 'USD', 'GBP', 'EUR']) {
+    for (const curr of ['INR', 'USD']) {
       const orig = Number(prices[curr]?.originalPrice)
       const offer = Number(prices[curr]?.offerPrice)
 
