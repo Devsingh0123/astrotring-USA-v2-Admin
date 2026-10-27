@@ -221,7 +221,7 @@ export function PackModal({ open, onOpenChange, packToEdit = null }) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[92vh] overflow-y-auto p-0 gap-0 border-border/60 shadow-2xl bg-card">
+      <DialogContent className="sm:max-w-2xl w-full max-h-[92vh] overflow-y-auto p-0 gap-0 border-border/60 shadow-2xl bg-card">
         {/* Header */}
         <div className="p-6 border-b border-border/40 bg-muted/20">
           <DialogHeader className="gap-1.5">
