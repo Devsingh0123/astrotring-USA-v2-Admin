@@ -232,18 +232,18 @@ export function BlogEditorPage() {
 
   return (
     <div className="space-y-6">
-      {/* Top Floating Command Bar */}
-      <div className="sticky top-16 z-20 -mx-6 -mt-8 sm:-mx-8 lg:-mx-10 px-6 sm:px-8 lg:px-10 py-3.5 border-b border-border/60 bg-background/90 backdrop-blur-md flex flex-wrap items-center justify-between gap-4">
+      {/* Top Header & Action Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-border/60">
         <div className="flex items-center gap-3">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => navigate('/blogs')}
-            className="rounded-xl gap-1 text-muted-foreground hover:text-foreground"
+            className="rounded-xl gap-1.5 text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
-            <span className="hidden sm:inline">Back to Hub</span>
+            <span>Back to Hub</span>
           </Button>
 
           <div className="h-4 w-px bg-border/60 hidden sm:block" />

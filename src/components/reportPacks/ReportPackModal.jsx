@@ -34,12 +34,12 @@ import { toast } from 'sonner'
 const DEFAULT_REPORT_PRICES = {
   INR: { originalPrice: '2999', offerPrice: '1999' },
   USD: { originalPrice: '29.99', offerPrice: '19.99' },
-    }
+}
 
 const CURRENCIES = [
   { code: 'INR', label: 'Indian Rupee', symbol: '₹', step: '1', min: '1', defaultOffer: '1999', defaultOrig: '2999' },
   { code: 'USD', label: 'US Dollar', symbol: '$', step: '0.01', min: '0.01', defaultOffer: '19.99', defaultOrig: '29.99' },
-    ]
+]
 
 const TIERS = [
   {
@@ -236,24 +236,28 @@ export function ReportPackModal({ open, onOpenChange, packToEdit = null }) {
       return
     }
 
-    // Build prices payload
+    // Build prices payload strictly for INR and USD
     const structuredPrices = {}
     for (const curr of ['INR', 'USD']) {
       const orig = Number(prices[curr]?.originalPrice)
       const offer = Number(prices[curr]?.offerPrice)
 
-      if (!isNaN(offer) && offer > 0) {
-        structuredPrices[curr] = {
-          offerPrice: offer,
-          originalPrice: !isNaN(orig) && orig > 0 ? orig : offer,
-        }
+      if (isNaN(offer) || offer <= 0) {
+        setActiveTab('pricing')
+        setValidationError(`Please enter a valid offer price greater than 0 for ${curr}. Both INR and USD are required.`)
+        return
       }
-    }
 
-    if (Object.keys(structuredPrices).length === 0) {
-      setActiveTab('pricing')
-      setValidationError('Please configure at least one currency price (e.g. INR or USD).')
-      return
+      if (!isNaN(orig) && orig > 0 && offer > orig) {
+        setActiveTab('pricing')
+        setValidationError(`Offer price for ${curr} cannot exceed original price.`)
+        return
+      }
+
+      structuredPrices[curr] = {
+        offerPrice: offer,
+        originalPrice: !isNaN(orig) && orig > 0 ? orig : offer,
+      }
     }
 
     const payload = {

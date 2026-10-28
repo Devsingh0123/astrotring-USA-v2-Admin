@@ -30,12 +30,12 @@ import { toast } from 'sonner'
 const DEFAULT_PRICES = {
   INR: { originalPrice: '999', offerPrice: '499' },
   USD: { originalPrice: '14.99', offerPrice: '7.99' },
-    }
+}
 
 const CURRENCIES = [
   { code: 'INR', label: 'Indian Rupee', symbol: '₹', step: '1', min: '1' },
   { code: 'USD', label: 'US Dollar', symbol: '$', step: '0.01', min: '0.01' },
-    ]
+]
 
 const TIERS = [
   { id: 'silver', label: 'Silver', color: 'border-slate-400/40 text-slate-700 dark:text-slate-300 bg-slate-500/10' },
@@ -158,6 +158,11 @@ export function PackModal({ open, onOpenChange, packToEdit = null }) {
 
       if (isNaN(offer) || offer <= 0) {
         setValidationError(`Offer price for ${curr.code} must be greater than 0.`)
+        return
+      }
+
+      if (!isNaN(orig) && orig > 0 && offer > orig) {
+        setValidationError(`Offer price for ${curr.code} cannot exceed original price.`)
         return
       }
 

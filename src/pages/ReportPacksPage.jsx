@@ -305,7 +305,6 @@ export function ReportPacksPage() {
           <div className="mt-2 flex items-baseline gap-1.5 font-mono text-xs font-bold text-foreground">
             <span className="px-1.5 py-0.5 rounded bg-muted/60">INR ₹</span>
             <span className="px-1.5 py-0.5 rounded bg-muted/60">USD $</span>
-            
           </div>
         </div>
       </div>
