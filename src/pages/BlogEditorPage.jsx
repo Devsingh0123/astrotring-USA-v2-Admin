@@ -332,7 +332,7 @@ export function BlogEditorPage() {
 
             {/* Permanent Slug Link Preview */}
             <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
-              <span className="font-mono text-muted-foreground/70">astrotring.com/blog/</span>
+              <span className="font-mono text-muted-foreground/70">m.astrotring.com/blog/</span>
               <input
                 type="text"
                 value={slug}
@@ -506,7 +506,7 @@ export function BlogEditorPage() {
                     {metaTitle || title || 'Article Title'} | AstroTring
                   </p>
                   <p className="text-emerald-600 dark:text-emerald-400 font-mono text-[10px]">
-                    https://astrotring.com/blog/{slug || 'post-slug'}
+                    https://m.astrotring.com/blog/{slug || 'post-slug'}
                   </p>
                   <p className="text-muted-foreground text-[11px] line-clamp-2">
                     {metaDescription || excerpt || 'Article description snippet will render here...'}
