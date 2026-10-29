@@ -4,6 +4,7 @@ import {
   fetchUsersThunk,
   fetchUserDetailsThunk,
   updateUserStatusThunk,
+  exportUsersCsvThunk,
 } from '@/features/users/usersApi'
 import {
   Table,
@@ -18,6 +19,7 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserDetailsModal } from '@/components/users/UserDetailsModal'
+import { AdjustCreditsModal } from '@/components/users/AdjustCreditsModal'
 import {
   Search,
   RefreshCw,
@@ -32,6 +34,8 @@ import {
   Sparkles,
   FileText,
   X,
+  Download,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -48,7 +52,7 @@ function formatRegistrationDate(dateValue) {
 
 export function UsersPage() {
   const dispatch = useDispatch()
-  const { users, pagination, loadingList, updatingStatusId } = useSelector(
+  const { users, pagination, loadingList, updatingStatusId, exportingCsv } = useSelector(
     (state) => state.users
   )
 
@@ -57,6 +61,8 @@ export function UsersPage() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(20)
   const [modalOpen, setModalOpen] = useState(false)
+  const [creditsModalOpen, setCreditsModalOpen] = useState(false)
+  const [userForCredits, setUserForCredits] = useState(null)
 
   // Debounce search input by 400ms
   useEffect(() => {
@@ -78,6 +84,24 @@ export function UsersPage() {
   const handleOpenDetails = (userId) => {
     dispatch(fetchUserDetailsThunk(userId))
     setModalOpen(true)
+  }
+
+  const handleOpenAdjustCredits = (user) => {
+    setUserForCredits(user)
+    setCreditsModalOpen(true)
+  }
+
+  const handleExportCsv = async () => {
+    try {
+      const filters = {}
+      if (debouncedSearch && debouncedSearch.trim()) {
+        filters.search = debouncedSearch.trim()
+      }
+      const res = await dispatch(exportUsersCsvThunk(filters)).unwrap()
+      toast.success(`Exported users CSV: ${res.filename}`)
+    } catch (err) {
+      toast.error(err || 'Failed to export users CSV.')
+    }
   }
 
   const handleToggleBlock = async (user) => {
@@ -145,16 +169,34 @@ export function UsersPage() {
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={loadUsers}
-          disabled={loadingList}
-          className="gap-2 h-9.5 px-4 rounded-xl border-border/70 hover:bg-muted font-medium self-start sm:self-auto"
-        >
-          <RefreshCw className={`size-3.5 ${loadingList ? 'animate-spin' : ''}`} />
-          <span>Refresh</span>
-        </Button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportCsv}
+            disabled={exportingCsv || loadingList}
+            className="gap-2 h-9.5 px-3.5 rounded-xl border-border/70 hover:bg-muted font-medium"
+            title="Download Users list as CSV"
+          >
+            {exportingCsv ? (
+              <Loader2 className="size-3.5 animate-spin text-primary" />
+            ) : (
+              <Download className="size-3.5 text-primary" />
+            )}
+            <span>{exportingCsv ? 'Exporting...' : 'Export CSV'}</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadUsers}
+            disabled={loadingList}
+            className="gap-2 h-9.5 px-3.5 rounded-xl border-border/70 hover:bg-muted font-medium"
+          >
+            <RefreshCw className={`size-3.5 ${loadingList ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </Button>
+        </div>
       </div>
 
       {/* Search & Filter Toolbar */}
@@ -364,15 +406,28 @@ export function UsersPage() {
 
                     {/* Actions */}
                     <TableCell className="py-3.5 text-right">
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        onClick={() => handleOpenDetails(u.id)}
-                        className="gap-1.5 text-xs"
-                      >
-                        <Eye className="size-3" />
-                        <span>Details</span>
-                      </Button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          onClick={() => handleOpenAdjustCredits(u)}
+                          className="gap-1 text-xs hover:border-primary/50 hover:text-primary"
+                          title="Adjust Jyotish or Report Credits"
+                        >
+                          <Sparkles className="size-3 text-primary" />
+                          <span>Credits</span>
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          onClick={() => handleOpenDetails(u.id)}
+                          className="gap-1.5 text-xs"
+                        >
+                          <Eye className="size-3" />
+                          <span>Details</span>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )
@@ -434,7 +489,18 @@ export function UsersPage() {
       </div>
 
       {/* User Details Modal */}
-      <UserDetailsModal open={modalOpen} onOpenChange={setModalOpen} />
+      <UserDetailsModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onAdjustCredits={handleOpenAdjustCredits}
+      />
+
+      {/* Adjust Credits Modal */}
+      <AdjustCreditsModal
+        open={creditsModalOpen}
+        onOpenChange={setCreditsModalOpen}
+        user={userForCredits}
+      />
     </div>
   )
 }

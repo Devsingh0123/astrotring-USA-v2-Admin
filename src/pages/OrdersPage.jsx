@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchOrdersThunk,
   fetchOrderDetailsThunk,
+  openOrderInvoicePrintThunk,
+  exportOrdersCsvThunk,
 } from '@/features/orders/ordersApi'
 import {
   Table,
@@ -33,6 +35,9 @@ import {
   Check,
   Filter,
   RotateCcw,
+  Printer,
+  Download,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -47,7 +52,9 @@ const STATUS_FILTERS = [
 
 export function OrdersPage() {
   const dispatch = useDispatch()
-  const { orders, pagination, loadingList } = useSelector((state) => state.orders)
+  const { orders, pagination, loadingList, exportingCsv, printingInvoiceId } = useSelector(
+    (state) => state.orders
+  )
 
   const [searchInput, setSearchInput] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -86,6 +93,27 @@ export function OrdersPage() {
   const handleOpenDetails = (orderId) => {
     dispatch(fetchOrderDetailsThunk(orderId))
     setModalOpen(true)
+  }
+
+  const handlePrintInvoice = async (e, orderId) => {
+    e.stopPropagation()
+    try {
+      await dispatch(openOrderInvoicePrintThunk(orderId)).unwrap()
+    } catch (err) {
+      toast.error(err || 'Failed to open printable invoice.')
+    }
+  }
+
+  const handleExportCsv = async () => {
+    try {
+      const filters = {}
+      if (statusFilter && statusFilter !== 'all') filters.status = statusFilter
+      if (debouncedSearch && debouncedSearch.trim()) filters.search = debouncedSearch.trim()
+      const res = await dispatch(exportOrdersCsvThunk(filters)).unwrap()
+      toast.success(`Exported orders CSV: ${res.filename}`)
+    } catch (err) {
+      toast.error(err || 'Failed to export orders CSV.')
+    }
   }
 
   const handleOpenRefund = (e, order) => {
@@ -199,14 +227,30 @@ export function OrdersPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={handleExportCsv}
+            disabled={exportingCsv || loadingList}
+            className="gap-2 h-9.5 px-3.5 rounded-xl border-border/70 hover:bg-muted font-medium"
+            title="Download Orders list with GST breakdown as CSV"
+          >
+            {exportingCsv ? (
+              <Loader2 className="size-3.5 animate-spin text-primary" />
+            ) : (
+              <Download className="size-3.5 text-primary" />
+            )}
+            <span>{exportingCsv ? 'Exporting...' : 'Export CSV'}</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
             onClick={loadOrders}
             disabled={loadingList}
-            className="gap-2 h-9.5 px-4 rounded-xl border-border/70 hover:bg-muted font-medium"
+            className="gap-2 h-9.5 px-3.5 rounded-xl border-border/70 hover:bg-muted font-medium"
           >
             <RefreshCw
               className={`size-3.5 ${loadingList ? 'animate-spin' : ''}`}
             />
-            Refresh
+            <span>Refresh</span>
           </Button>
         </div>
       </div>
@@ -449,6 +493,23 @@ export function OrdersPage() {
                     {/* Actions */}
                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1.5">
+                        {order.status === 'paid' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => handlePrintInvoice(e, order.id)}
+                            disabled={printingInvoiceId === order.id}
+                            className="gap-1 h-8 text-xs font-medium border-border/70 hover:border-primary/40 hover:text-primary"
+                            title="Print / View GST Invoice"
+                          >
+                            {printingInvoiceId === order.id ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
+                            ) : (
+                              <Printer className="w-3.5 h-3.5 text-primary" />
+                            )}
+                            <span>Invoice</span>
+                          </Button>
+                        )}
                         {order.status === 'paid' && (
                           <Button
                             variant="outline"

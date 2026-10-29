@@ -8,6 +8,8 @@ import packsReducer from '@/features/packs/packsSlice'
 import dashboardReducer from '@/features/dashboard/dashboardSlice'
 import blogsReducer from '@/features/blogs/blogsSlice'
 import reportPacksReducer from '@/features/reportPacks/reportPacksSlice'
+import chatsReducer from '@/features/chats/chatsSlice'
+import adminsReducer from '@/features/admins/adminsSlice'
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +22,7 @@ export const store = configureStore({
     reportPacks: reportPacksReducer,
     dashboard: dashboardReducer,
     blogs: blogsReducer,
+    chats: chatsReducer,
+    admins: adminsReducer,
   },
 })

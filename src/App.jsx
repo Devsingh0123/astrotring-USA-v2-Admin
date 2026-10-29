@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 import { fetchAdminMeThunk } from '@/features/auth/authApi'
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AdminLayout } from '@/components/layout/AdminLayout'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import { LoginPage } from '@/pages/LoginPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { UsersPage } from '@/pages/UsersPage'
@@ -14,6 +15,10 @@ import { QuestionPacksPage } from '@/pages/QuestionPacksPage'
 import { ReportPacksPage } from '@/pages/ReportPacksPage'
 import { BlogsPage } from '@/pages/BlogsPage'
 import { BlogEditorPage } from '@/pages/BlogEditorPage'
+import { ChatsPage } from '@/pages/ChatsPage'
+import { AdminsPage } from '@/pages/AdminsPage'
+import { SettingsPage } from '@/pages/SettingsPage'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -24,32 +29,41 @@ export default function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
+      <ErrorBoundary standalone>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <AdminLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DashboardPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="orders" element={<OrdersPage />} />
-            <Route path="coupons" element={<CouponsPage />} />
-            <Route path="question-packs" element={<QuestionPacksPage />} />
-            <Route path="report-packs" element={<ReportPacksPage />} />
-            <Route path="blogs" element={<BlogsPage />} />
-            <Route path="blogs/new" element={<BlogEditorPage />} />
-            <Route path="blogs/edit/:id" element={<BlogEditorPage />} />
-          </Route>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardPage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="orders" element={<OrdersPage />} />
+              <Route path="coupons" element={<CouponsPage />} />
+              <Route path="question-packs" element={<QuestionPacksPage />} />
+              <Route path="report-packs" element={<ReportPacksPage />} />
+              <Route path="blogs" element={<BlogsPage />} />
+              <Route path="blogs/new" element={<BlogEditorPage />} />
+              <Route path="blogs/edit/:id" element={<BlogEditorPage />} />
+              <Route path="chats" element={<ChatsPage />} />
+              <Route path="admins" element={<AdminsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              {/* Internal 404 rendered inside AdminLayout */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Standalone 404 for unauthenticated or external route errors */}
+            <Route path="/404" element={<NotFoundPage standalone />} />
+            <Route path="*" element={<NotFoundPage standalone />} />
+          </Routes>
+        </BrowserRouter>
+      </ErrorBoundary>
       <Toaster position="top-right" richColors closeButton />
     </>
   )

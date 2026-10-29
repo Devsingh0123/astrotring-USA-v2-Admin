@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 
 export function AdminLayout() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -20,7 +21,9 @@ export function AdminLayout() {
         <Header onOpenMobileSidebar={() => setMobileOpen(true)} />
         <main className="flex-1 overflow-y-auto px-6 py-8 sm:px-8 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1600px] space-y-8">
-            <Outlet />
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
           </div>
         </main>
       </div>

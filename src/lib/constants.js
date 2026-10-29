@@ -53,4 +53,22 @@ export const NAV_ITEMS = [
     icon: 'BookOpen',
     badge: null,
   },
+  {
+    title: 'AI Chats',
+    path: '/chats',
+    icon: 'MessageSquare',
+    badge: null,
+  },
+  {
+    title: 'Staff Admins',
+    path: '/admins',
+    icon: 'ShieldCheck',
+    badge: null,
+  },
+  {
+    title: 'Settings',
+    path: '/settings',
+    icon: 'Settings',
+    badge: null,
+  },
 ]

@@ -1,6 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { STORAGE_KEYS } from '@/lib/constants'
-import { loginAdminThunk, fetchAdminMeThunk, logoutAdminThunk } from './authApi'
+import {
+  loginAdminThunk,
+  fetchAdminMeThunk,
+  logoutAdminThunk,
+  updateAdminProfileThunk,
+  changeAdminPasswordThunk,
+  fetchSystemStatusThunk,
+} from './authApi'
 
 const getStoredAdmin = () => {
   try {
@@ -21,6 +28,10 @@ const authSlice = createSlice({
     isAuthenticated: hasToken,
     isLoading: hasToken && !initialAdmin,
     isSubmitting: false,
+    updatingProfile: false,
+    changingPassword: false,
+    systemStatus: null,
+    loadingSystemStatus: false,
     error: null,
   },
   reducers: {
@@ -74,7 +85,45 @@ const authSlice = createSlice({
         state.admin = null
         state.isAuthenticated = false
         state.isLoading = false
+        state.systemStatus = null
         state.error = null
+      })
+
+      // updateAdminProfileThunk
+      .addCase(updateAdminProfileThunk.pending, (state) => {
+        state.updatingProfile = true
+      })
+      .addCase(updateAdminProfileThunk.fulfilled, (state, action) => {
+        state.updatingProfile = false
+        if (action.payload) {
+          state.admin = { ...state.admin, ...action.payload }
+        }
+      })
+      .addCase(updateAdminProfileThunk.rejected, (state) => {
+        state.updatingProfile = false
+      })
+
+      // changeAdminPasswordThunk
+      .addCase(changeAdminPasswordThunk.pending, (state) => {
+        state.changingPassword = true
+      })
+      .addCase(changeAdminPasswordThunk.fulfilled, (state) => {
+        state.changingPassword = false
+      })
+      .addCase(changeAdminPasswordThunk.rejected, (state) => {
+        state.changingPassword = false
+      })
+
+      // fetchSystemStatusThunk
+      .addCase(fetchSystemStatusThunk.pending, (state) => {
+        state.loadingSystemStatus = true
+      })
+      .addCase(fetchSystemStatusThunk.fulfilled, (state, action) => {
+        state.loadingSystemStatus = false
+        state.systemStatus = action.payload
+      })
+      .addCase(fetchSystemStatusThunk.rejected, (state) => {
+        state.loadingSystemStatus = false
       })
   },
 })

@@ -15,6 +15,9 @@ import {
   Package,
   BookOpen,
   LogOut,
+  Menu,
+  MessageSquare,
+  Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NAV_ITEMS } from '@/lib/constants'
@@ -33,6 +36,9 @@ const ICON_MAP = {
   Tag,
   Package,
   BookOpen,
+  MessageSquare,
+  ShieldCheck,
+  Settings,
 }
 
 export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
@@ -67,36 +73,53 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
         )}
       >
         {/* Brand Header */}
-        <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
-              <Sparkles className="size-4" />
-            </div>
-            {!isCollapsed && (
-              <div className="flex flex-col truncate">
-                <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">
-                  AstroTring
-                </span>
-                <span className="truncate text-[11px] text-muted-foreground">
-                  Command Center
-                </span>
+        <div
+          className={cn(
+            'flex h-16 items-center border-b border-sidebar-border transition-all duration-200',
+            isCollapsed ? 'justify-center px-2' : 'justify-between px-4'
+          )}
+        >
+          {isCollapsed ? (
+            /* When collapsed: hide logo, menu toggle button takes place of logo */
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={onToggleCollapse}
+              className="flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all active:scale-95"
+              title="Expand sidebar"
+              aria-label="Expand sidebar"
+            >
+              <Menu className="size-4.5" />
+            </Button>
+          ) : (
+            /* When expanded: show logo & title on left, collapse button on right */
+            <>
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+                  <Sparkles className="size-4" />
+                </div>
+                <div className="flex flex-col truncate">
+                  <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">
+                    AstroTring
+                  </span>
+                  <span className="truncate text-[11px] text-muted-foreground">
+                    Command Center
+                  </span>
+                </div>
               </div>
-            )}
-          </div>
 
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            onClick={onToggleCollapse}
-            className="hidden lg:inline-flex text-muted-foreground hover:text-sidebar-foreground"
-            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            {isCollapsed ? (
-              <ChevronRight className="size-4" />
-            ) : (
-              <ChevronLeft className="size-4" />
-            )}
-          </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={onToggleCollapse}
+                className="hidden lg:inline-flex text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground rounded-lg transition-colors"
+                title="Collapse sidebar"
+                aria-label="Collapse sidebar"
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Navigation Links */}
@@ -141,7 +164,12 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
           {!isCollapsed ? (
             <div className="group relative flex items-center justify-between rounded-xl border border-sidebar-border/80 bg-sidebar-accent/25 p-2 transition-all hover:border-sidebar-border hover:bg-sidebar-accent/50 shadow-2xs">
               {/* User Avatar + Metadata */}
-              <div className="flex items-center gap-2.5 min-w-0 pr-1">
+              <NavLink
+                to="/settings"
+                onClick={onCloseMobile}
+                className="flex items-center gap-2.5 min-w-0 pr-1 hover:opacity-85 transition-opacity"
+                title="Account Settings & Diagnostics"
+              >
                 {admin?.avatar_url ? (
                   <div className="relative size-8 shrink-0">
                     <img
@@ -178,7 +206,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
                     <span className="truncate">{admin?.name ? adminEmail : 'Online'}</span>
                   </div>
                 </div>
-              </div>
+              </NavLink>
 
               {/* Integrated Sign Out Button */}
               <button

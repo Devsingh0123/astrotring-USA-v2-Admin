@@ -3,6 +3,8 @@ import {
   fetchUsersThunk,
   fetchUserDetailsThunk,
   updateUserStatusThunk,
+  adjustUserCreditsThunk,
+  exportUsersCsvThunk,
 } from './usersApi'
 
 const usersSlice = createSlice({
@@ -19,6 +21,8 @@ const usersSlice = createSlice({
     loadingList: false,
     loadingDetails: false,
     updatingStatusId: null,
+    adjustingCredits: false,
+    exportingCsv: false,
     error: null,
   },
   reducers: {
@@ -80,6 +84,58 @@ const usersSlice = createSlice({
       })
       .addCase(updateUserStatusThunk.rejected, (state, action) => {
         state.updatingStatusId = null
+        state.error = action.payload
+      })
+
+      // adjustUserCreditsThunk
+      .addCase(adjustUserCreditsThunk.pending, (state) => {
+        state.adjustingCredits = true
+        state.error = null
+      })
+      .addCase(adjustUserCreditsThunk.fulfilled, (state, action) => {
+        state.adjustingCredits = false
+        const updated = action.payload
+        if (updated?.id) {
+          state.users = state.users.map((u) =>
+            u.id === updated.id
+              ? {
+                  ...u,
+                  credit_balance:
+                    updated.credit_balance !== undefined ? updated.credit_balance : u.credit_balance,
+                  report_credits:
+                    updated.report_credits !== undefined ? updated.report_credits : u.report_credits,
+                }
+              : u
+          )
+          if (state.selectedUser && state.selectedUser.id === updated.id) {
+            state.selectedUser = {
+              ...state.selectedUser,
+              credit_balance:
+                updated.credit_balance !== undefined
+                  ? updated.credit_balance
+                  : state.selectedUser.credit_balance,
+              report_credits:
+                updated.report_credits !== undefined
+                  ? updated.report_credits
+                  : state.selectedUser.report_credits,
+            }
+          }
+        }
+      })
+      .addCase(adjustUserCreditsThunk.rejected, (state, action) => {
+        state.adjustingCredits = false
+        state.error = action.payload
+      })
+
+      // exportUsersCsvThunk
+      .addCase(exportUsersCsvThunk.pending, (state) => {
+        state.exportingCsv = true
+      })
+      .addCase(exportUsersCsvThunk.fulfilled, (state) => {
+        state.exportingCsv = false
+      })
+      .addCase(exportUsersCsvThunk.rejected, (state, action) => {
+        state.exportingCsv = false
         state.error = action.payload
       })
   },

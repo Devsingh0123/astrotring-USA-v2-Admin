@@ -3,6 +3,8 @@ import {
   fetchOrdersThunk,
   fetchOrderDetailsThunk,
   refundOrderThunk,
+  openOrderInvoicePrintThunk,
+  exportOrdersCsvThunk,
 } from './ordersApi'
 
 const ordersSlice = createSlice({
@@ -19,6 +21,8 @@ const ordersSlice = createSlice({
     loadingList: false,
     loadingDetails: false,
     refundingId: null,
+    printingInvoiceId: null,
+    exportingCsv: false,
     error: null,
   },
   reducers: {
@@ -95,6 +99,30 @@ const ordersSlice = createSlice({
       })
       .addCase(refundOrderThunk.rejected, (state, action) => {
         state.refundingId = null
+        state.error = action.payload
+      })
+
+      // openOrderInvoicePrintThunk
+      .addCase(openOrderInvoicePrintThunk.pending, (state, action) => {
+        state.printingInvoiceId = action.meta.arg
+      })
+      .addCase(openOrderInvoicePrintThunk.fulfilled, (state) => {
+        state.printingInvoiceId = null
+      })
+      .addCase(openOrderInvoicePrintThunk.rejected, (state, action) => {
+        state.printingInvoiceId = null
+        state.error = action.payload
+      })
+
+      // exportOrdersCsvThunk
+      .addCase(exportOrdersCsvThunk.pending, (state) => {
+        state.exportingCsv = true
+      })
+      .addCase(exportOrdersCsvThunk.fulfilled, (state) => {
+        state.exportingCsv = false
+      })
+      .addCase(exportOrdersCsvThunk.rejected, (state, action) => {
+        state.exportingCsv = false
         state.error = action.payload
       })
   },

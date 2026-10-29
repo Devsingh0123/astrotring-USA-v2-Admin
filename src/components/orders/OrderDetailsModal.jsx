@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { clearSelectedOrder } from '@/features/orders/ordersSlice'
+import { openOrderInvoicePrintThunk } from '@/features/orders/ordersApi'
 import { RefundOrderDialog } from './RefundOrderDialog'
 import {
   Copy,
@@ -27,12 +28,14 @@ import {
   FileCheck,
   Layers,
   RotateCcw,
+  Printer,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function OrderDetailsModal({ open, onOpenChange }) {
   const dispatch = useDispatch()
-  const { selectedOrder, loadingDetails } = useSelector((state) => state.orders)
+  const { selectedOrder, loadingDetails, printingInvoiceId } = useSelector((state) => state.orders)
   const [copiedKey, setCopiedKey] = useState(null)
   const [refundDialogOpen, setRefundDialogOpen] = useState(false)
 
@@ -316,14 +319,35 @@ export function OrderDetailsModal({ open, onOpenChange }) {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="bg-background/80 border border-border/60 rounded px-2 py-0.5 font-mono">
-                      SAC: {invoice?.sac_code || '998431'}
-                    </span>
-                    {selectedOrder.billing_state && (
-                      <span className="bg-background/80 border border-border/60 rounded px-2 py-0.5">
-                        State: <strong className="text-foreground">{selectedOrder.billing_state}</strong>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="bg-background/80 border border-border/60 rounded px-2 py-0.5 font-mono">
+                        SAC: {invoice?.sac_code || '998431'}
                       </span>
+                      {selectedOrder.billing_state && (
+                        <span className="bg-background/80 border border-border/60 rounded px-2 py-0.5">
+                          State: <strong className="text-foreground">{selectedOrder.billing_state}</strong>
+                        </span>
+                      )}
+                    </div>
+
+                    {selectedOrder.status === 'paid' && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="xs"
+                        onClick={() => dispatch(openOrderInvoicePrintThunk(selectedOrder.id))}
+                        disabled={printingInvoiceId === selectedOrder.id}
+                        className="gap-1 border-primary/40 text-primary hover:bg-primary/10 text-xs ml-1"
+                        title="Print or Save GST Tax Invoice (HTML / PDF)"
+                      >
+                        {printingInvoiceId === selectedOrder.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                        ) : (
+                          <Printer className="w-3 h-3 text-primary" />
+                        )}
+                        <span>Print</span>
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -437,9 +461,28 @@ export function OrderDetailsModal({ open, onOpenChange }) {
             <div />
           )}
 
-          <Button variant="outline" onClick={handleClose}>
-            Close
-          </Button>
+          <div className="flex items-center gap-2">
+            {selectedOrder?.status === 'paid' && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => dispatch(openOrderInvoicePrintThunk(selectedOrder.id))}
+                disabled={printingInvoiceId === selectedOrder.id}
+                className="gap-1.5 border-primary/40 text-primary hover:bg-primary/10 font-medium"
+              >
+                {printingInvoiceId === selectedOrder.id ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Printer className="w-3.5 h-3.5" />
+                )}
+                <span>Print GST Invoice</span>
+              </Button>
+            )}
+
+            <Button variant="outline" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
         </div>
 
         {/* Refund Dialog */}

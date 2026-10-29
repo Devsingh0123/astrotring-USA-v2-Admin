@@ -43,7 +43,7 @@ function formatAccountDate(dateValue) {
   })
 }
 
-export function UserDetailsModal({ open, onOpenChange }) {
+export function UserDetailsModal({ open, onOpenChange, onAdjustCredits }) {
   const dispatch = useDispatch()
   const { selectedUser, loadingDetails, updatingStatusId } = useSelector(
     (state) => state.users
@@ -309,6 +309,17 @@ export function UserDetailsModal({ open, onOpenChange }) {
               </div>
 
               <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onAdjustCredits?.(selectedUser)}
+                  className="gap-1.5 border-primary/40 text-primary hover:bg-primary/10"
+                >
+                  <Sparkles className="size-3.5" />
+                  <span>Adjust Credits</span>
+                </Button>
+
                 <Button
                   variant={selectedUser.is_blocked ? 'default' : 'destructive'}
                   size="sm"
