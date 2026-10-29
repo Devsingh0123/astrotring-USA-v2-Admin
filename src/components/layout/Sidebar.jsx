@@ -45,7 +45,9 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
   }
 
   const adminEmail = admin?.email || 'admin@astrotring.com'
-  const initialLetter = (adminEmail[0] || 'A').toUpperCase()
+  const adminName = admin?.name || adminEmail
+  const initialLetter = (adminName[0] || 'A').toUpperCase()
+  const roleLabel = admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'
 
   return (
     <>
@@ -140,27 +142,40 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
             <div className="group relative flex items-center justify-between rounded-xl border border-sidebar-border/80 bg-sidebar-accent/25 p-2 transition-all hover:border-sidebar-border hover:bg-sidebar-accent/50 shadow-2xs">
               {/* User Avatar + Metadata */}
               <div className="flex items-center gap-2.5 min-w-0 pr-1">
-                <div className="relative flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 font-bold text-xs text-primary-foreground shadow-xs ring-1 ring-primary/20">
-                  {initialLetter}
-                  <span className="absolute -bottom-0.5 -right-0.5 flex size-2 items-center justify-center">
-                    <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500 ring-2 ring-sidebar" />
-                  </span>
-                </div>
+                {admin?.avatar_url ? (
+                  <div className="relative size-8 shrink-0">
+                    <img
+                      src={admin.avatar_url}
+                      alt={adminName}
+                      className="size-8 rounded-lg object-cover ring-1 ring-sidebar-border"
+                    />
+                    <span className="absolute -bottom-0.5 -right-0.5 flex size-2 items-center justify-center">
+                      <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500 ring-2 ring-sidebar" />
+                    </span>
+                  </div>
+                ) : (
+                  <div className="relative flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 font-bold text-xs text-primary-foreground shadow-xs ring-1 ring-primary/20">
+                    {initialLetter}
+                    <span className="absolute -bottom-0.5 -right-0.5 flex size-2 items-center justify-center">
+                      <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500 ring-2 ring-sidebar" />
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex min-w-0 flex-1 flex-col">
                   <span
                     className="truncate text-xs font-semibold text-sidebar-foreground tracking-tight"
-                    title={adminEmail}
+                    title={adminName}
                   >
-                    {adminEmail}
+                    {adminName}
                   </span>
                   <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                    <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
+                    <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400 capitalize">
                       <ShieldCheck className="size-3 shrink-0" />
-                      Admin
+                      {roleLabel}
                     </span>
                     <span>•</span>
-                    <span className="truncate">Online</span>
+                    <span className="truncate">{admin?.name ? adminEmail : 'Online'}</span>
                   </div>
                 </div>
               </div>
@@ -179,15 +194,28 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
           ) : (
             /* Collapsed Mode */
             <div className="flex flex-col items-center gap-2">
-              <div
-                className="relative flex size-8 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 font-bold text-xs text-primary-foreground shadow-xs ring-1 ring-primary/20"
-                title={adminEmail}
-              >
-                {initialLetter}
-                <span className="absolute -bottom-0.5 -right-0.5 flex size-2 items-center justify-center">
-                  <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500 ring-2 ring-sidebar" />
-                </span>
-              </div>
+              {admin?.avatar_url ? (
+                <div className="relative size-8" title={adminName}>
+                  <img
+                    src={admin.avatar_url}
+                    alt={adminName}
+                    className="size-8 rounded-lg object-cover ring-1 ring-sidebar-border"
+                  />
+                  <span className="absolute -bottom-0.5 -right-0.5 flex size-2 items-center justify-center">
+                    <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500 ring-2 ring-sidebar" />
+                  </span>
+                </div>
+              ) : (
+                <div
+                  className="relative flex size-8 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 font-bold text-xs text-primary-foreground shadow-xs ring-1 ring-primary/20"
+                  title={adminName}
+                >
+                  {initialLetter}
+                  <span className="absolute -bottom-0.5 -right-0.5 flex size-2 items-center justify-center">
+                    <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500 ring-2 ring-sidebar" />
+                  </span>
+                </div>
+              )}
 
               <button
                 type="button"

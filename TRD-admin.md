@@ -14,7 +14,7 @@
 The **AstroTring Admin Portal** is an enterprise-grade administration console designed to manage user identities, monitor Vedic birth chart bindings, adjust question and report credit allocations, enforce access controls, and oversee platform operations.
 
 ### Key Operational Goals
-1. **Secure Administrator Authentication:** Credential-based authentication (Email + Password, strict `role === 'admin'` verification, zero OTP dependencies).
+1. **Secure Administrator Authentication:** Credential-based authentication backed by the dedicated `admins` table (Email + Password, strict `role IN ('admin', 'super_admin')` verification, zero OTP dependencies).
 2. **User Identity & Credit Control:** Centralized visibility over registered accounts, onboarding statuses, primary/secondary birth chart bindings, and instant account suspension/reactivation.
 3. **Enterprise UI/UX Standard:** Modern dark-canvas obsidian aesthetic built with Tailwind CSS v4, Base UI Nova primitives, responsive navigation rail, and accessible data tables.
 4. **Predictable State Architecture:** Asynchronous data handling powered by Redux Toolkit and Axios, ensuring tokens remain isolated in persistent storage and decoupled from application state trees.
@@ -153,8 +153,8 @@ Base URL: `http://localhost:5001/api/v1/admin`
 
 | Method | Endpoint | Access | Purpose | Request Body / Query | Success Response Data |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/auth/login` | Public | Authenticates admin credentials | `{ email, password }` | `{ admin: { id, email, role }, accessToken, refreshToken }` |
-| `GET` | `/auth/me` | Protected | Hydrates active admin session | None (Bearer header) | `{ admin: { id, email, role, created_at } }` |
+| `POST` | `/auth/login` | Public | Authenticates admin credentials | `{ email, password }` | `{ admin: { id, email, name, role, avatar_url }, accessToken, refreshToken }` |
+| `GET` | `/auth/me` | Protected | Hydrates active admin session | None (Bearer header) | `{ admin: { id, email, name, role, avatar_url, created_at } }` |
 | `GET` | `/users` | Protected | Lists users with pagination & search | `?page=1&limit=20&search=...` | `{ users: [...], pagination: { total, page, limit, totalPages } }` |
 | `GET` | `/users/:id` | Protected | Fetches detailed profile + charts | None (`:id` param) | `{ user: { ..., birth_details: [...] } }` |
 | `PATCH` | `/users/:id/status` | Protected | Suspends or unblocks user account | `{ is_blocked: boolean }` | `{ id, email, role, is_blocked }` |

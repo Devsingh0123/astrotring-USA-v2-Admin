@@ -2,6 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '@/lib/api'
 import { STORAGE_KEYS } from '@/lib/constants'
 
+const isAdminRole = (role) => ['admin', 'super_admin'].includes(role)
+
 export const loginAdminThunk = createAsyncThunk(
   'auth/loginAdmin',
   async ({ email, password }, { rejectWithValue }) => {
@@ -10,7 +12,7 @@ export const loginAdminThunk = createAsyncThunk(
       const payload = data?.data || data
       const admin = payload?.admin
 
-      if (!admin || admin.role !== 'admin') {
+      if (!admin || !isAdminRole(admin.role)) {
         return rejectWithValue('Access denied: Account does not have administrator privileges.')
       }
 
@@ -46,7 +48,7 @@ export const fetchAdminMeThunk = createAsyncThunk(
     try {
       const { data } = await api.get('/auth/me')
       const admin = data?.data?.admin || data?.admin
-      if (!admin || admin.role !== 'admin') {
+      if (!admin || !isAdminRole(admin.role)) {
         localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
         localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
         localStorage.removeItem(STORAGE_KEYS.ADMIN_USER)

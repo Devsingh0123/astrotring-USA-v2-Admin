@@ -18,7 +18,9 @@ export function Header({ onOpenMobileSidebar }) {
         : location.pathname.startsWith(item.path)
     ) || NAV_ITEMS[0]
 
-  const initialLetter = (admin?.email?.[0] || 'A').toUpperCase()
+  const displayName = admin?.name || admin?.email || 'Administrator'
+  const initialLetter = (displayName[0] || 'A').toUpperCase()
+  const roleLabel = admin?.role === 'super_admin' ? 'Super Admin' : 'Enterprise Admin'
 
   return (
     <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border/60 bg-background/85 px-6 backdrop-blur-md lg:px-8">
@@ -46,7 +48,7 @@ export function Header({ onOpenMobileSidebar }) {
       <div className="flex items-center gap-3">
         <span className="hidden items-center gap-1.5 rounded-full border border-border/80 bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground md:inline-flex">
           <ShieldCheck className="size-3.5 text-primary" />
-          Enterprise Admin
+          {roleLabel}
         </span>
 
         <Button
@@ -64,12 +66,20 @@ export function Header({ onOpenMobileSidebar }) {
         </Button>
 
         <div className="hidden items-center gap-2.5 rounded-xl border border-border/80 bg-card/60 px-3 py-1.5 backdrop-blur-sm sm:flex">
-          <div className="flex size-6.5 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 text-xs font-bold text-primary-foreground shadow-xs">
-            {initialLetter}
-          </div>
+          {admin?.avatar_url ? (
+            <img
+              src={admin.avatar_url}
+              alt={displayName}
+              className="size-6.5 rounded-lg object-cover ring-1 ring-border"
+            />
+          ) : (
+            <div className="flex size-6.5 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary/80 text-xs font-bold text-primary-foreground shadow-xs">
+              {initialLetter}
+            </div>
+          )}
           <div className="flex flex-col text-left">
-            <span className="max-w-[180px] truncate text-xs font-medium text-foreground">
-              {admin?.email || 'admin@astrotring.com'}
+            <span className="max-w-[180px] truncate text-xs font-medium text-foreground" title={displayName}>
+              {displayName}
             </span>
           </div>
         </div>
