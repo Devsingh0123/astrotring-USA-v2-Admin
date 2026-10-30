@@ -37,7 +37,6 @@ import {
   fetchSystemStatusThunk,
 } from '@/features/auth/authApi'
 import { uploadFileApi } from '@/features/uploads/uploadsApi'
-import { BRAND, CLOUDINARY_FOLDERS } from '@/lib/constants'
 
 function formatUptime(seconds) {
   if (!seconds || seconds <= 0) return '0s'
@@ -113,7 +112,7 @@ export function SettingsPage() {
     setIsUploadingAvatar(true)
     const toastId = toast.loading('Uploading avatar to Cloudinary...')
     try {
-      const result = await uploadFileApi(file, CLOUDINARY_FOLDERS.ADMINS)
+      const result = await uploadFileApi(file, 'japaika/admins')
       const uploadedUrl = result?.secure_url || result?.url
       if (!uploadedUrl) throw new Error('Cloudinary did not return a valid URL')
 
@@ -638,7 +637,7 @@ export function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-1">
                 <div className="text-lg font-bold tracking-tight text-foreground truncate">
-                  {systemStatus?.service || BRAND.BACKEND_SERVICE_FALLBACK}
+                  {systemStatus?.service || 'japaika-admin-backend'}
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span>Node:</span>

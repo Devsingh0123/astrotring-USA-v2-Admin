@@ -26,7 +26,6 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { uploadFileApi } from '@/features/uploads/uploadsApi'
-import { BRAND, CLOUDINARY_FOLDERS } from '@/lib/constants'
 import { toast } from 'sonner'
 
 export function BlogEditor({ content = '', onChange }) {
@@ -79,7 +78,7 @@ export function BlogEditor({ content = '', onChange }) {
 
   const setLink = () => {
     const previousUrl = editor.getAttributes('link').href
-    const url = window.prompt(`Enter link URL (e.g. ${BRAND.USER_URL}):`, previousUrl)
+    const url = window.prompt('Enter link URL (e.g. https://japaika.com):', previousUrl)
 
     if (url === null) return
     if (url === '') {
@@ -115,7 +114,7 @@ export function BlogEditor({ content = '', onChange }) {
     const toastId = toast.loading('Uploading article image to Cloudinary...')
 
     try {
-      const uploadedFile = await uploadFileApi(file, CLOUDINARY_FOLDERS.BLOGS)
+      const uploadedFile = await uploadFileApi(file, 'japaika/blogs')
       const secureUrl = uploadedFile?.secure_url || uploadedFile?.url
 
       if (secureUrl && editor) {

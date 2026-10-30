@@ -2,9 +2,8 @@
 
 > **Document Version:** 1.1.0  
 > **Target Audience:** Admin Frontend Engineers, Full-Stack Developers, QA  
-> **Scope:** `admin/` frontend workspace (`https://admin.japaika.com`)  
-> **Backend Service:** Admin Backend (`https://adminbackend.japaika.com`, local default port `5001`)  
-> **Public User Platform:** `https://japaika.com` (API: `https://backend.japaika.com`)  
+> **Scope:** `admin/` frontend workspace  
+> **Backend Service:** Admin Backend (`admin-backend/`, default port `5001`)  
 > **API Contracts Reference:** `shared/admin-api-contracts.md`  
 > **Platform Standard:** React 19 + Vite + Tailwind CSS v4 + Redux Toolkit + Base UI Nova  
 
@@ -151,7 +150,7 @@ sequenceDiagram
 
 ## 5. API Interface Mapping (per `shared/admin-api-contracts.md`)
 
-Base URL: `https://adminbackend.japaika.com/api/v1/admin` (Local Dev: `http://localhost:5001/api/v1/admin`)
+Base URL: `http://localhost:5001/api/v1/admin`
 
 | Method | Endpoint | Access | Purpose | Request Body / Query | Success Response Data |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -232,10 +231,7 @@ The admin console leverages shadcn/ui configured with `@base-ui/react` and the *
 ### 8.2 Environment Configuration
 Create a `.env` file in `admin/`:
 ```env
-# Local Dev: http://localhost:5001/api/v1/admin
-# Production: https://adminbackend.japaika.com/api/v1/admin
 VITE_ADMIN_API_BASE_URL=http://localhost:5001/api/v1/admin
-VITE_USER_FRONTEND_URL=https://japaika.com
 ```
 
 ### 8.3 CLI Commands

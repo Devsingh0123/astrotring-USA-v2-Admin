@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { fetchAdminMeThunk } from '@/features/auth/authApi'
-import { purgeLegacyStorageKeys } from '@/lib/constants'
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { ErrorBoundary } from '@/components/common/ErrorBoundary'
@@ -25,7 +24,6 @@ export default function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    purgeLegacyStorageKeys()
     dispatch(fetchAdminMeThunk())
   }, [dispatch])
 

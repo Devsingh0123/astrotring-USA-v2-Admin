@@ -1,19 +1,8 @@
 # Japaika — Admin Portal
 
-Enterprise administration console for **Japaika** ([japaika.com](https://japaika.com)), hosted at [admin.japaika.com](https://admin.japaika.com).
+Enterprise administration console for **Japaika** ([japaika.com](https://japaika.com)).
 
 This portal enables platform administrators to authenticate securely, oversee user registrations, inspect bound Vedic birth charts, manage question and report packs, monitor AI chat logs, publish SEO blog articles, review orders & GST invoices, and govern staff RBAC permissions.
-
----
-
-## Domain & Service Architecture
-
-| Service | Production Domain | Local Development |
-| :--- | :--- | :--- |
-| **Admin Frontend (`admin/`)** | `https://admin.japaika.com` | `http://localhost:5173` |
-| **Admin Backend (`admin-backend/`)** | `https://adminbackend.japaika.com` | `http://localhost:5001` |
-| **User Frontend (`frontend/`)** | `https://japaika.com` | `http://localhost:5174` |
-| **User Backend (`backend/`)** | `https://backend.japaika.com` | `http://localhost:5000` |
 
 ---
 
@@ -63,10 +52,9 @@ Copy the example environment file:
 ```bash
 cp .env.example .env
 ```
-Configure `VITE_ADMIN_API_BASE_URL` (local dev or `https://adminbackend.japaika.com/api/v1/admin` for production):
+Configure `VITE_ADMIN_API_BASE_URL` in `.env`:
 ```env
 VITE_ADMIN_API_BASE_URL=http://localhost:5001/api/v1/admin
-VITE_USER_FRONTEND_URL=https://japaika.com
 ```
 
 ### 2. Install Dependencies

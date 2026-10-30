@@ -9,7 +9,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { BRAND } from '@/lib/constants'
 import {
   MessageSquare,
   Sparkles,
@@ -44,7 +43,7 @@ export function ChatThreadDetailsModal({ open, onOpenChange, thread, loading }) 
     if (!thread) return
 
     const lines = [
-      `=== ${BRAND.NAME} AI Conversation Log ===`,
+      `=== Japaika AI Conversation Log ===`,
       `Thread ID: ${thread.id}`,
       `Engine: ${thread.engine?.toUpperCase() || 'JYOTISH'}`,
       `Title: ${thread.title || 'Untitled Thread'}`,

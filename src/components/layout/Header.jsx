@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Menu, Moon, Sun, ShieldCheck } from 'lucide-react'
 import { toggleTheme } from '@/features/theme/themeSlice'
-import { BRAND, NAV_ITEMS } from '@/lib/constants'
+import { NAV_ITEMS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 
 export function Header({ onOpenMobileSidebar }) {
@@ -40,7 +40,7 @@ export function Header({ onOpenMobileSidebar }) {
             {currentNav.title}
           </h1>
           <p className="hidden text-xs text-muted-foreground sm:block">
-            {BRAND.ENTERPRISE_SUBTITLE}
+            Japaika Enterprise Administration
           </p>
         </div>
       </div>

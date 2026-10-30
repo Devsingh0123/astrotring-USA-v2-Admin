@@ -5,7 +5,6 @@ import { Sparkles, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, ArrowRight } f
 import { toast } from 'sonner'
 import { loginAdminThunk } from '@/features/auth/authApi'
 import { clearAuthError } from '@/features/auth/authSlice'
-import { BRAND } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 
 export function LoginPage() {
@@ -65,7 +64,7 @@ export function LoginPage() {
             <Sparkles className="size-6 text-primary" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            {BRAND.CONSOLE_TITLE}
+            Japaika Console
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Enterprise administration portal. Sign in to manage platform operations.
@@ -99,7 +98,7 @@ export function LoginPage() {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={BRAND.ADMIN_EMAIL_PLACEHOLDER}
+                  placeholder="admin@japaika.com"
                   className="h-9 w-full rounded-lg border border-input bg-background pr-3 pl-9 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30"
                 />
               </div>
