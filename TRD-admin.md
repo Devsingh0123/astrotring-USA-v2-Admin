@@ -1,9 +1,10 @@
-# Technical Requirements Document (TRD) — AstroTring Admin Portal
+# Technical Requirements Document (TRD) — Japaika Admin Portal
 
-> **Document Version:** 1.0.0  
+> **Document Version:** 1.1.0  
 > **Target Audience:** Admin Frontend Engineers, Full-Stack Developers, QA  
-> **Scope:** `admin/` frontend workspace  
-> **Backend Service:** Admin Backend (`admin-backend/`, default port `5001`)  
+> **Scope:** `admin/` frontend workspace (`https://admin.japaika.com`)  
+> **Backend Service:** Admin Backend (`https://adminbackend.japaika.com`, local default port `5001`)  
+> **Public User Platform:** `https://japaika.com` (API: `https://backend.japaika.com`)  
 > **API Contracts Reference:** `shared/admin-api-contracts.md`  
 > **Platform Standard:** React 19 + Vite + Tailwind CSS v4 + Redux Toolkit + Base UI Nova  
 
@@ -11,7 +12,7 @@
 
 ## 1. System Overview & Objectives
 
-The **AstroTring Admin Portal** is an enterprise-grade administration console designed to manage user identities, monitor Vedic birth chart bindings, adjust question and report credit allocations, enforce access controls, and oversee platform operations.
+The **Japaika Admin Portal** is an enterprise-grade administration console designed to manage user identities, monitor Vedic birth chart bindings, adjust question and report credit allocations, enforce access controls, and oversee platform operations.
 
 ### Key Operational Goals
 1. **Secure Administrator Authentication:** Credential-based authentication backed by the dedicated `admins` table (Email + Password, strict `role IN ('admin', 'super_admin')` verification, zero OTP dependencies).
@@ -99,10 +100,11 @@ admin/
 
 ### 4.1 Token Storage Policy (Strict Rule)
 - **Zero Token Storage in Redux:** In accordance with platform security guidelines, authentication tokens (`accessToken`, `refreshToken`) must **NEVER** be persisted in the Redux store state tree.
-- **Storage Mechanism:** Tokens are stored directly in browser `localStorage` using keys defined in [`src/lib/constants.js`](file:///c:/Users/HP/Desktop/astrotring%20USA%20v2/admin/src/lib/constants.js):
-  - `astrotring_admin_access_token`
-  - `astrotring_admin_refresh_token`
-  - `astrotring_admin_user` (cached administrator profile snapshot)
+- **Storage Mechanism:** Tokens are stored directly in browser `localStorage` using keys defined in [`src/lib/constants.js`](./src/lib/constants.js):
+  - `japaika_admin_access_token`
+  - `japaika_admin_refresh_token`
+  - `japaika_admin_user` (cached administrator profile snapshot)
+  - `japaika_admin_theme` (UI theme preference)
 
 ### 4.2 Authentication Flow (Email + Password)
 ```mermaid
@@ -149,7 +151,7 @@ sequenceDiagram
 
 ## 5. API Interface Mapping (per `shared/admin-api-contracts.md`)
 
-Base URL: `http://localhost:5001/api/v1/admin`
+Base URL: `https://adminbackend.japaika.com/api/v1/admin` (Local Dev: `http://localhost:5001/api/v1/admin`)
 
 | Method | Endpoint | Access | Purpose | Request Body / Query | Success Response Data |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -206,12 +208,12 @@ Base URL: `http://localhost:5001/api/v1/admin`
 
 ## 7. UI/UX Design System & Nova Tokens
 
-The admin console leverages shadcn/ui configured with `@base-ui/react` and the **Nova** preset (`base-nova` in [`components.json`](file:///c:/Users/HP/Desktop/astrotring%20USA%20v2/admin/components.json)):
+The admin console leverages shadcn/ui configured with `@base-ui/react` and the **Nova** preset (`base-nova` in [`components.json`](./components.json)):
 
 ### Semantic Palette & Variables
 - `--color-background`: Primary canvas (`#0F172A` in dark mode, neutral white in light mode).
 - `--color-card`: Elevated surface for tables, modals, and login cards.
-- `--color-primary`: AstroTring celestial accent color.
+- `--color-primary`: Japaika celestial accent color.
 - `--color-border`: 1px subtle separation borders for data tables and navigation rails.
 - `--color-muted`: Low-contrast backgrounds for table headers and tag chips.
 
@@ -230,7 +232,10 @@ The admin console leverages shadcn/ui configured with `@base-ui/react` and the *
 ### 8.2 Environment Configuration
 Create a `.env` file in `admin/`:
 ```env
+# Local Dev: http://localhost:5001/api/v1/admin
+# Production: https://adminbackend.japaika.com/api/v1/admin
 VITE_ADMIN_API_BASE_URL=http://localhost:5001/api/v1/admin
+VITE_USER_FRONTEND_URL=https://japaika.com
 ```
 
 ### 8.3 CLI Commands

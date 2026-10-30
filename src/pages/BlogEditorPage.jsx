@@ -7,6 +7,7 @@ import {
   updateBlogThunk,
 } from '@/features/blogs/blogsApi'
 import { clearCurrentBlog } from '@/features/blogs/blogsSlice'
+import { BRAND } from '@/lib/constants'
 import { BlogEditor } from '@/components/blogs/BlogEditor'
 import { CoverImageUpload } from '@/components/blogs/CoverImageUpload'
 import { DeleteBlogDialog } from '@/components/blogs/DeleteBlogDialog'
@@ -332,7 +333,7 @@ export function BlogEditorPage() {
 
             {/* Permanent Slug Link Preview */}
             <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
-              <span className="font-mono text-muted-foreground/70">m.astrotring.com/blog/</span>
+              <span className="font-mono text-muted-foreground/70">{BRAND.USER_DOMAIN}/blog/</span>
               <input
                 type="text"
                 value={slug}
@@ -503,10 +504,10 @@ export function BlogEditorPage() {
                 <div className="rounded-xl border border-border/60 bg-muted/20 p-3 space-y-1 text-xs">
                   <p className="text-[10px] uppercase font-bold text-muted-foreground">Google Preview</p>
                   <p className="text-sky-500 font-medium truncate">
-                    {metaTitle || title || 'Article Title'} | AstroTring
+                    {metaTitle || title || 'Article Title'} | {BRAND.NAME}
                   </p>
                   <p className="text-emerald-600 dark:text-emerald-400 font-mono text-[10px]">
-                    https://m.astrotring.com/blog/{slug || 'post-slug'}
+                    {BRAND.USER_URL}/blog/{slug || 'post-slug'}
                   </p>
                   <p className="text-muted-foreground text-[11px] line-clamp-2">
                     {metaDescription || excerpt || 'Article description snippet will render here...'}

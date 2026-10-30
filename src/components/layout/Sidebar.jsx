@@ -20,7 +20,7 @@ import {
   Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { NAV_ITEMS } from '@/lib/constants'
+import { BRAND, NAV_ITEMS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 import { logoutAdminThunk } from '@/features/auth/authApi'
 import { toast } from 'sonner'
@@ -50,9 +50,9 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
     toast.success('Signed out of Admin Console')
   }
 
-  const adminEmail = admin?.email || 'admin@astrotring.com'
+  const adminEmail = admin?.email || BRAND.ADMIN_EMAIL_PLACEHOLDER
   const adminName = admin?.name || adminEmail
-  const initialLetter = (adminName[0] || 'A').toUpperCase()
+  const initialLetter = (adminName[0] || 'J').toUpperCase()
   const roleLabel = admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'
 
   return (
@@ -100,7 +100,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, mobileOpen, onCloseMobi
                 </div>
                 <div className="flex flex-col truncate">
                   <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">
-                    AstroTring
+                    {BRAND.NAME}
                   </span>
                   <span className="truncate text-[11px] text-muted-foreground">
                     Command Center

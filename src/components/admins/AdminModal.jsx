@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createAdminThunk } from '@/features/admins/adminsApi'
 import { clearAdminsError } from '@/features/admins/adminsSlice'
+import { BRAND } from '@/lib/constants'
 import { ShieldAlert, Shield, ShieldCheck, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -122,7 +123,7 @@ export function AdminModal({ open, onOpenChange }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="staff@astrotring.com"
+              placeholder={BRAND.STAFF_EMAIL_PLACEHOLDER}
               required
             />
           </div>

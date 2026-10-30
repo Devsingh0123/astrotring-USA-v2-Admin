@@ -95,7 +95,7 @@ export const exportUsersCsvThunk = createAsyncThunk(
       link.href = url
 
       const contentDisposition = response.headers?.['content-disposition']
-      let filename = `astrotring-users-${new Date().toISOString().split('T')[0]}.csv`
+      let filename = `japaika-users-${new Date().toISOString().split('T')[0]}.csv`
       if (contentDisposition) {
         const match = contentDisposition.match(/filename="?([^"]+)"?/)
         if (match && match[1]) filename = match[1]

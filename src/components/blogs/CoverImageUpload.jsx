@@ -3,6 +3,7 @@ import { Image as ImageIcon, Upload, X, Link as LinkIcon, Check, Loader2 } from 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { uploadFileApi } from '@/features/uploads/uploadsApi'
+import { CLOUDINARY_FOLDERS } from '@/lib/constants'
 import { toast } from 'sonner'
 
 export function CoverImageUpload({ value, onChange }) {
@@ -29,7 +30,7 @@ export function CoverImageUpload({ value, onChange }) {
     const toastId = toast.loading('Uploading cover image to Cloudinary...')
 
     try {
-      const uploadedFile = await uploadFileApi(file, 'astrotring/blogs')
+      const uploadedFile = await uploadFileApi(file, CLOUDINARY_FOLDERS.BLOGS)
       const secureUrl = uploadedFile?.secure_url || uploadedFile?.url
 
       if (secureUrl && onChange) {
