@@ -1,4 +1,4 @@
-name: Deploy Admin Frontend
+name: Deploy Admin Frontend 
 
 on:
   push:
